@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DigitExample.SynchronizeDigitPage"
+             xmlns:local="clr-namespace:DigitExample.ViewModel"
+             Title="Synchronize Digit">
+    <ContentPage.BindingContext>
+        <local:DigitViewModel Digit="0" />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Update digit:"
+                VerticalOptions="Start" 
+                HorizontalOptions="Start" />
+            <Stepper x:Name="stepperDigit"
+                     Maximum="9" Minimum="0" Increment="1"
+                     Value="{Binding DigitAsDouble}" />
+
+            <Slider x:Name="sliderDigit" 
+                    Maximum="9" Minimum="0" 
+                    Value="{Binding Digit}" />
+            <Label Text="Current value is: " />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
