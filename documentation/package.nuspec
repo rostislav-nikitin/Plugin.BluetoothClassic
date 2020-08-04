@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>BluetoothClassic.Android</id>
+    <version>1.0.0</version>
+    <authors>Rostyslav Nikitin</authors>
+    <owners>>Rostyslav Nikitin</owners>
+    <license type="file">LICENSE</license>
+    <projectUrl>https://github.com/rostislav-nikitin/BluetoothClassic</projectUrl>
+    <repository type="git" url="https://github.com/rostislav-nikitin/BluetoothClassic.git" branch="master" />
+    <icon>images\logo.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The package with Android related types for bluetooth classics support on Xamarin</description>
+    <releaseNotes>Inital release</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>Bluetooth Classics Xamarin socOS Android iOS UWP</tags>
+  </metadata>
+  <files>
+    <file src="..\..\LICENSE" target="" />
+    <file src="..\..\documenation\iamges\logo.png" target="images\" />
+  </files>
+</package>

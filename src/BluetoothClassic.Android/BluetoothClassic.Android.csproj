@@ -24,6 +24,18 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Rostyslav Nikitin</Authors>
+    <Description>The package with base types for bluetooth classics support on Xamarin</Description>
+    <Copyright>Copyright 2020</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/rostislav-nikitin/BluetoothClassic</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/rostislav-nikitin/BluetoothClassic</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Bluetooth Classics Xamarin socOS Android iOS UWP</PackageTags>
+    <PackageReleaseNotes>Inital release</PackageReleaseNotes>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
@@ -44,6 +56,16 @@
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\documentation\images\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />

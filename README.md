@@ -1,4 +1,4 @@
-![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/logo/logo.png?raw=true)
+![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/images/logo.png?raw=true)
 # BluetoothClassic for Xamarin
 This is a package that supports sending/receiving data through bluetooth classic protocol under the:
 * Xamarin.Forms
