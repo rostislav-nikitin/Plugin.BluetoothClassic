@@ -48,11 +48,11 @@
         protected override async void OnAppearing()
         {
             RefreshUI();
-            //await DisconnectIfConnectedAsync();
+            await DisconnectIfConnectedAsync();
         }
-        /*private async Task DisconnectIfConnectedAsync()
+        private async Task DisconnectIfConnectedAsync()
         {
-            if (App.CurrentBluetoothConnection?.Connected == true)
+            if (App.CurrentBluetoothConnection != null)
             {
                 try
                 {
@@ -63,7 +63,7 @@
                     await DisplayAlert("Error", exception.Message, "Close");
                 }
             }
-        }*/
+        }
 
         private async void lvBluetoothBoundedDevices_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {

@@ -1,5 +1,7 @@
 ﻿namespace DigitExample
 {
+    using BluetoothClassic.Base;
+    using BluetoothClassic.Droid;
     using DigitExample.ViewModel;
     using System;
     using System.Text;
@@ -37,6 +39,33 @@
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            SendCurrentDigit();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
+            App.CurrentBluetoothConnection.OnError += CurrentBluetoothConnection_OnError;
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            App.CurrentBluetoothConnection.OnRecived -= CurrentBluetoothConnection_OnRecived;
+            App.CurrentBluetoothConnection.OnError -= CurrentBluetoothConnection_OnError;
+        }
+
+        private void CurrentBluetoothConnection_OnError(object sender, System.Threading.ThreadExceptionEventArgs errorEventArgs)
+        {
+            if(errorEventArgs.Exception is BluetoothTransmitterException)
+            {
+                SendCurrentDigit();
+            }
+        }
+
+        private void SendCurrentDigit()
+        {
             DigitViewModel model = (DigitViewModel)BindingContext;
             if (model != null && !model.Reciving)
             {
@@ -44,16 +73,5 @@
             }
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            App.CurrentBluetoothConnection.OnRecived -= CurrentBluetoothConnection_OnRecived;
-        }
     }
 }

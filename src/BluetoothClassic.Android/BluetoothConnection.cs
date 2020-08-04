@@ -6,6 +6,7 @@
     using Java.Util;
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -45,7 +46,7 @@
         private CancellationTokenSource _managerCancellationTokenSource;
         private CancellationTokenSource _socketCancellationTokenSource;
 
-        private readonly Queue<Memory<byte>> _sendQueue;
+        private readonly ConcurrentQueue<Memory<byte>> _sendQueue;
 
         /// <summary>
         /// The <see cref="BluetoothConnection"/> type constructor.
@@ -54,7 +55,7 @@
         public BluetoothConnection(string remoteDeviceAddress)
         {
             _remoteDeviceAddress = remoteDeviceAddress;
-            _sendQueue = new Queue<Memory<byte>>();
+            _sendQueue = new ConcurrentQueue<Memory<byte>>();
 
             SetInitializing();
         }
@@ -116,6 +117,7 @@
                 {
                     if (Initializing || Disposed)
                     {
+                        SetConnecting();
                         StartManager();
                         await ConnectToSocketAndStartTransiverAsync();
                     }
@@ -150,8 +152,7 @@
                         }
                         catch(Exception exception)
                         {
-                            string message = exception.Message;
-                            Log.Warn("StartManager::Task::Exception", message);
+                            HandleException("StartManager::Task::Exception", exception);
                         }
                     }
                 }
@@ -168,9 +169,7 @@
             }
             catch (Exception exception)
             {
-                SetErrorHappend();
-                string message = exception.Message;
-                Log.Warn("ConnectInternalAsync::Exception", message);
+                HandleException("ConnectInternalAsync::Exception", exception);
             }
         }
 
@@ -234,15 +233,12 @@
             }
             catch (Java.IO.IOException ioException)
             {
-                SetErrorHappend();
-                string message = ioException.Message;
-                Log.Warn("ReciveAsync::Task::BluetoothSocket.InputStream.ReadAsync::Java.IO.IOException::Error", message);
+                HandleException("ReciveAsync::Task::BluetoothSocket.InputStream.ReadAsync::Java.IO.IOException::Error",
+                    new BluetoothReciveException(ioException.Message, ioException));
             }
             catch (Exception exception)
             {
-                SetErrorHappend();
-                Log.Warn("ReciveAsync::Task::Exception", exception.Message);
-                RaiseErrorEvent(exception);
+                HandleException("ReciveAsync::Task::Exception", exception);
             }
         }
 
@@ -272,16 +268,17 @@
 
         private async Task SendAsync()
         {
-            if (_sendQueue.Any())
+            Memory<byte> buffer;
+            if (_sendQueue.TryPeek(out buffer))
             {
-                Memory<byte> buffer = _sendQueue.Peek();
                 byte[] bufferAsByteArray = buffer.ToArray();
 
                 try
                 {
                     await _socket?.OutputStream.WriteAsync(bufferAsByteArray,
                         BufferOffsetZero, buffer.Length, _socketCancellationTokenSource.Token);
-                    _sendQueue.Dequeue();
+
+                    _sendQueue.TryDequeue(out buffer);
 
                     try
                     {
@@ -295,15 +292,12 @@
                 }
                 catch (Java.IO.IOException ioException)
                 {
-                    SetErrorHappend();
-                    string message = ioException.Message;
-                    Log.Warn("SendAsync::Java.IO.IOException", message);
+                    HandleException("SendAsync::Java.IO.IOException",
+                        new BluetoothSendException(ioException.Message, ioException, buffer));
                 }
                 catch (Exception exception)
                 {
-                    SetErrorHappend();
-                    string message = exception.Message;
-                    Log.Warn("SendAsync::Java.IO.Exception", message);
+                    HandleException("SendAsync::Exception", exception);
                 }
             }
         }
@@ -412,6 +406,14 @@
         private void RaiseErrorEvent(Exception exception)
         {
             OnError?.Invoke(this, new ThreadExceptionEventArgs(exception));
+        }
+
+        private void HandleException(string tag, Exception exception)
+        {
+            SetErrorHappend();
+            string message = exception.Message;
+            Log.Warn(tag, message);
+            RaiseErrorEvent(exception);
         }
     }
 }
