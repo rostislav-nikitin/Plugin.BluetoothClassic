@@ -14,9 +14,7 @@
         public SelectBluetoothDevicePage()
         {
             _bluetoothAdapter = DependencyService.Resolve<IBluetoothAdapter>();
-
             InitializeComponent();
-            RefreshUI();
         }
 
         private void RefreshUI()
@@ -49,9 +47,10 @@
 
         protected override async void OnAppearing()
         {
-            await DisconnectIfConnectedAsync();
+            RefreshUI();
+            //await DisconnectIfConnectedAsync();
         }
-        private async Task DisconnectIfConnectedAsync()
+        /*private async Task DisconnectIfConnectedAsync()
         {
             if (App.CurrentBluetoothConnection?.Connected == true)
             {
@@ -64,7 +63,7 @@
                     await DisplayAlert("Error", exception.Message, "Close");
                 }
             }
-        }
+        }*/
 
         private async void lvBluetoothBoundedDevices_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {

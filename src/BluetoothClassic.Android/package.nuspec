@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>BluetoothClassic.Android</id>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <authors>Rostyslav Nikitin</authors>
     <owners>>Rostyslav Nikitin</owners>
     <license type="file">LICENSE</license>
@@ -17,7 +17,7 @@
   </metadata>
   <files>
     <file src="..\..\LICENSE" target="" />
-    <file src="..\..\documenation\iamges\logo.png" target="images\" />
+    <file src="..\..\documentation\images\logo.png" target="images\" />
   </files>
   <dependencies>
     <dependency id="Bluetooth.Classic" version="1.0.0" />

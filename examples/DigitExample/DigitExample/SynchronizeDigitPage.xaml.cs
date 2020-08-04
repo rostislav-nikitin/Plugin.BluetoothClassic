@@ -33,11 +33,7 @@
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             DigitViewModel model = (DigitViewModel)BindingContext;
-
-            if (model != null && App.CurrentBluetoothConnection.Connected)
-            {
-                App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { model.Digit } ));
-            }
+            App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { model.Digit } ));
         }
 
         protected override void OnAppearing()
