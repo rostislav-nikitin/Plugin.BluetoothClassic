@@ -8,12 +8,11 @@ This is a package that supports sending/receiving data through bluetooth classic
 
 ## How to install it?
 Install a next nuget package into your Xamarin.Forms project:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.0`
+* `PM> Install-Package BluetoothClassic.Base -Version 1.0.0`
 
 Install a next nuget packages into your Xamarin.Forms/Xamarin.Android projects:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.0`
-* `PM> Install-Package BluetoothClassic.Android -Version 1.0`
-
+* `PM> Install-Package BluetoothClassic.Base -Version 1.0.0`
+* `PM> Install-Package BluetoothClassic.Android -Version 1.0.1`
 
 ## How to use it?
 1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
