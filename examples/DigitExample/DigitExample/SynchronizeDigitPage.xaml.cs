@@ -2,6 +2,7 @@
 {
     using DigitExample.ViewModel;
     using System;
+    using System.Text;
     using Xamarin.Forms;
     using Xamarin.Forms.Xaml;
 
@@ -22,18 +23,25 @@
 
             if (model != null)
             {
+                model.SetReciving();
+
                 for (int index = 0; index < recivedEventArgs.Buffer.Length; index++)
                 {
                     byte value = recivedEventArgs.Buffer.ToArray()[index];
                     model.Digit = value;
                 }
+
+                model.SetRecived();
             }
         }
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             DigitViewModel model = (DigitViewModel)BindingContext;
-            App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { model.Digit } ));
+            if (model != null && !model.Reciving)
+            {
+                App.CurrentBluetoothConnection.Send(new Memory<byte>(new byte[] { model.Digit }));
+            }
         }
 
         protected override void OnAppearing()

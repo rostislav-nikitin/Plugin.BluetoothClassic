@@ -2,13 +2,10 @@
 {
     using System;
 
-    public class RecivedEventArgs
+    public class RecivedEventArgs : DataExchangeEventArgsBase
     {
-        public RecivedEventArgs(Memory<byte> buffer)
+        public RecivedEventArgs(Memory<byte> buffer) : base(buffer)
         {
-            Buffer = buffer;
         }
-
-        public Memory<byte> Buffer { get; }
     }
 }

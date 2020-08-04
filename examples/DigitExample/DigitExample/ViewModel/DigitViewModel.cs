@@ -1,25 +1,21 @@
 ﻿namespace DigitExample.ViewModel
 {
+    using System;
     using System.ComponentModel;
 
     public class DigitViewModel : INotifyPropertyChanged
     {
         public const byte DigitDefault = 0;
         private byte _digit = DigitDefault;
+        
+        public DigitViewModel()
+        {
+            SetRecived();
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public double DigitAsDouble
-        {
-            get
-            {
-                return Digit;
-            }
-            set
-            {
-                Digit = (byte)value;
-            }
-        }
+        internal bool Reciving { get; set; }
 
         public byte Digit
         {
@@ -39,5 +35,14 @@
             }
         }
 
+        internal void SetReciving()
+        {
+            Reciving = true;
+        }
+
+        internal void SetRecived()
+        {
+            Reciving = false;
+        }
     }
 }
