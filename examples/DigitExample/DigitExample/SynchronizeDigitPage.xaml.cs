@@ -1,22 +1,16 @@
-﻿using DigitExample.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace DigitExample
+﻿namespace DigitExample
 {
+    using DigitExample.ViewModel;
+    using System;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SynchronizeDigitPage : ContentPage
     {
         public SynchronizeDigitPage()
         {
             InitializeComponent();
-            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
 
             DigitViewModel model = (DigitViewModel)BindingContext;
             model.PropertyChanged += Model_PropertyChanged;
@@ -28,10 +22,10 @@ namespace DigitExample
 
             if (model != null)
             {
-                var length = recivedEventArgs.Buffer.Length;
-                if (length > 0)
+                for (int index = 0; index < recivedEventArgs.Buffer.Length; index++)
                 {
-                    model.Digit = recivedEventArgs.Buffer.ToArray()[length - 1];
+                    byte value = recivedEventArgs.Buffer.ToArray()[index];
+                    model.Digit = value;
                 }
             }
         }
@@ -39,31 +33,23 @@ namespace DigitExample
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             DigitViewModel model = (DigitViewModel)BindingContext;
-            if (model != null)
+
+            if (model != null && App.CurrentBluetoothConnection.Connected)
             {
                 App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { model.Digit } ));
             }
         }
 
-
-        /*
-        private void sliderDigit_ValueChanged(object sender, ValueChangedEventArgs e)
+        protected override void OnAppearing()
         {
-            App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { (byte)e.NewValue }));
+            base.OnAppearing();
+            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
         }
 
-        private void stepperDigit_ValueChanged(object sender, ValueChangedEventArgs e)
+        protected override void OnDisappearing()
         {
-            App.CurrentBluetoothConnection.SendAsync(new Memory<byte>(new byte[] { (byte)e.NewValue }));
-        }*/
-
-        protected override bool OnBackButtonPressed()
-        {
-            const bool BackAccepted = true;
-
+            base.OnDisappearing();
             App.CurrentBluetoothConnection.OnRecived -= CurrentBluetoothConnection_OnRecived;
-
-            return BackAccepted;
         }
     }
 }

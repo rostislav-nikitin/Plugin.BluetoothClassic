@@ -1,6 +1,8 @@
 ﻿namespace BluetoothClassic.Droid
 {
     using Android.Bluetooth;
+    using Android.OS;
+    using Android.Util;
     using BluetoothClassic.Base;
     using Java.Util;
 
@@ -67,35 +69,42 @@
             var remoteDevice = AndroidBluetoothAdapter.DefaultAdapter
                 .GetRemoteDevice(this._remoteDeviceAddress);
 
-            try
+            if(remoteDevice == null)
             {
-                _socket = remoteDevice.CreateRfcommSocketToServiceRecord(CurrentDeviceAddressAsUUID);
+                throw new BluetoothConnectionException($"Can not get remote device with address: \"{_remoteDeviceAddress}\"");
+            }
 
-                await _socket.ConnectAsync();
+            _socket = remoteDevice.CreateRfcommSocketToServiceRecord(CurrentDeviceAddressAsUUID);
 
-                Task.Run(async () =>
+            if (_socket == null)
+            {
+                throw new BluetoothConnectionException($"Can not get socket fot device with address: \"{_remoteDeviceAddress}\"");
+            }
+
+            await _socket.ConnectAsync();
+
+            StartListener();
+        }
+
+        const int BufferOffsetZero = 0;
+        const int BufferSizeDefault = 32;
+
+        private void StartListener()
+        {
+            Task.Run(async () =>
+            {
+
+                while (Connected)
                 {
-                    while (true)
-                    {
-                        //Memory<byte> buffer = new Memory<byte>();
-                        const int OffsetZero = 0;
-                        const int BufferSizeDefault = 16;
-                        byte[] buffer = new byte[BufferSizeDefault];
-                        int recivedBytesCount = await _socket.InputStream.ReadAsync(buffer, OffsetZero, BufferSizeDefault, 
-                            _cancellationTokenSource.Token);
-                        RaiseRecived(new Memory<byte>(buffer, OffsetZero, recivedBytesCount));
-                    }
+                    byte[] buffer = new byte[BufferSizeDefault];
 
-                }, _cancellationTokenSource.Token);
-            }
-            catch(Java.IO.IOException exception)
-            {
-                throw new BluetoothConnectionException($"Can not create socket for the remote device with address: \"{_remoteDeviceAddress}\".", exception);
-            }
-            catch
-            {
-                throw;
-            }
+                    int recivedBytesCount = await _socket.InputStream.ReadAsync(buffer, BufferOffsetZero, BufferSizeDefault,
+                        _cancellationTokenSource.Token);
+
+                    RaiseRecived(new Memory<byte>(buffer, BufferOffsetZero, recivedBytesCount));
+                }
+
+            }, _cancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -124,12 +133,35 @@
         /// <returns>Returns the <see cref="Task"/> instance.</returns>
         public async Task SendAsync(Memory<byte> buffer)
         {
-            if(!Connected)
+
+            if (!Connected)
             {
                 throw new BluetoothConnectionException($"You do not connected to the device with address: \"{_remoteDeviceAddress}\". Please, use the \"ConnectAsync\" method to connect.");
             }
 
-            await _socket.OutputStream.WriteAsync(buffer, _cancellationTokenSource.Token);
+            // Try to re-connect (because for now can't to detect does connected)
+            /*try
+            {
+                Disconnect();
+                await ConnectAsync();
+            }
+            catch(Exception exception) 
+            {
+                Log.Warn("Connect", exception.Message);
+            }*/
+            byte[] bufferAsByteArray = buffer.ToArray();
+
+            if(bufferAsByteArray.Length != buffer.Length)
+            {
+                ;
+            }
+
+            if (bufferAsByteArray.Length != 1)
+            {
+                ;
+            }
+
+            await _socket.OutputStream.WriteAsync(bufferAsByteArray, BufferOffsetZero, buffer.Length, _cancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -138,7 +170,6 @@
         public void Dispose()
         {
             Disconnect();
-
         }
 
         private void CancelCancellationTokenSource()

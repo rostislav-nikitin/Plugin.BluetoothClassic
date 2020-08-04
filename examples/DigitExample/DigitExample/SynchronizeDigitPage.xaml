@@ -6,24 +6,44 @@
              mc:Ignorable="d"
              x:Class="DigitExample.SynchronizeDigitPage"
              xmlns:local="clr-namespace:DigitExample.ViewModel"
-             Title="Synchronize Digit">
+             Title="Digit">
     <ContentPage.BindingContext>
         <local:DigitViewModel Digit="0" />
     </ContentPage.BindingContext>
-    
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Update digit:"
-                VerticalOptions="Start" 
-                HorizontalOptions="Start" />
-            <Stepper x:Name="stepperDigit"
-                     Maximum="9" Minimum="0" Increment="1"
-                     Value="{Binding DigitAsDouble}" />
-
-            <Slider x:Name="sliderDigit" 
+            <Grid Padding="0" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="64" />
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="64" />
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" VerticalOptions="Start" FontSize="Large" 
+                       Text="{Binding Digit, StringFormat='Current value is: {0:F0}'}"/>
+                <Label Grid.Column="0" Grid.Row="1"
+                       VerticalOptions="Start"
+                       FontSize="Large" Text="Change with slider:" />
+                <Slider Grid.Column="0" Grid.Row="2" x:Name="sliderDigit" 
+                    VerticalOptions="Center"
                     Maximum="9" Minimum="0" 
+                        MinimumTrackColor="Red"
+                        MaximumTrackColor="Gray"
+                        ThumbColor="Red"
                     Value="{Binding Digit}" />
-            <Label Text="Current value is: " />
+                <Label Grid.Column="0" Grid.Row="3" 
+                       VerticalOptions="Start"
+                       FontSize="Large" Text="Change with stepper:" />
+                <Stepper Grid.Column="0" Grid.Row="4" x:Name="stepperDigit"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Maximum="9" Minimum="0" Increment="1"
+                    Value="{Binding Digit}" />
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

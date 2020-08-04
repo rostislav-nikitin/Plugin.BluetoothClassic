@@ -7,6 +7,7 @@
 
     public interface IBluetoothConnection : IDisposable
     {
+        bool Connected { get; }
         Task ConnectAsync();
 
         Task SendAsync(Memory<byte> buffer);

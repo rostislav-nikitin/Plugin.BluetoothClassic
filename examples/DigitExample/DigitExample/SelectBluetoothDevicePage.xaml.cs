@@ -1,15 +1,11 @@
-﻿using BluetoothClassic.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace DigitExample
+﻿namespace DigitExample
 {
+    using BluetoothClassic.Base;
+    using System;
+    using System.Threading.Tasks;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SelectBluetoothDevicePage : ContentPage
     {
@@ -43,33 +39,79 @@ namespace DigitExample
         {
             _bluetoothAdapter.Enable();
             RefreshUI();
-
         }
 
         private void btnDisableBluetooth_Clicked(object sender, EventArgs e)
         {
-            
             _bluetoothAdapter.Disable();
             RefreshUI();
+        }
+
+        protected override async void OnAppearing()
+        {
+            await DisconnectIfConnectedAsync();
+        }
+        private async Task DisconnectIfConnectedAsync()
+        {
+            if (App.CurrentBluetoothConnection?.Connected == true)
+            {
+                try
+                {
+                    App.CurrentBluetoothConnection.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    await DisplayAlert("Error", exception.Message, "Close");
+                }
+            }
         }
 
         private async void lvBluetoothBoundedDevices_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             BluetoothDeviceModel bluetoothDeviceModel = e.SelectedItem as BluetoothDeviceModel;
+            lvBluetoothBoundedDevices.SelectedItem = null;
 
             if (bluetoothDeviceModel != null)
             {
-                var connection = _bluetoothAdapter.CreateConnection(bluetoothDeviceModel);
-                await connection.ConnectAsync();
-                App.CurrentBluetoothConnection = connection;
-
-                await Navigation.PushAsync(new SynchronizeDigitPage());
-
-                /*DisplayAlert("Bluetooth device selected",
-                    $"Name: \"{bluetoothDeviceModel.Name}\"\n \"Address:{bluetoothDeviceModel.Address}\".",
-                    "Close");*/
+                var connected = await TryConnectAsync(bluetoothDeviceModel);
+                if (connected)
+                {
+                    await Navigation.PushAsync(new SynchronizeDigitPage());
+                }
             }
         }
 
+        private async Task<bool> TryConnectAsync(BluetoothDeviceModel bluetoothDeviceModel)
+        {
+            const bool Connected = true;
+            const bool NotConnected = false;
+
+
+            var connection = _bluetoothAdapter.CreateConnection(bluetoothDeviceModel);
+            try
+            {
+                await connection.ConnectAsync();
+                App.CurrentBluetoothConnection = connection;
+
+                return Connected; 
+            }
+            catch (BluetoothConnectionException exception)
+            {
+                await DisplayAlert("Connection error",
+                    $"Can not connect to the device: {bluetoothDeviceModel.Name}({bluetoothDeviceModel.Address}).\n" +
+                        $"Exception: \"{exception.Message}\"\n" +
+                        "Please, try another one.",
+                    "Close");
+
+                return NotConnected;
+            }
+            catch (Exception exception)
+            {
+                await DisplayAlert("Generic error", exception.Message, "Close");
+
+                return NotConnected;
+            }
+
+        }
     }
 }

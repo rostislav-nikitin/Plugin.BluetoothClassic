@@ -13,6 +13,9 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64" />
+                </Grid.RowDefinitions>
                 
                 <Button Grid.Column="0" x:Name="btnEnableBluetooth" Text="Enable Bluetooth" 
                         IsEnabled="False" Clicked="btnEnableBluetooth_Clicked" />
