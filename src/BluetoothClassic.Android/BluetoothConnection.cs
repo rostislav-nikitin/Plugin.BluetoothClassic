@@ -136,7 +136,8 @@
         private void StartManager()
         {
             TimeSpan TimeoutDefault = new TimeSpan(0, 0, 0, 0, 100);
-            _managerCancellationTokenSource = new CancellationTokenSource();
+
+            StartManagerCancellationTokenSource();
 
             Task.Run(async () =>
             {
@@ -320,7 +321,8 @@
                 try
                 {
                     Disconnect();
-                    _managerCancellationTokenSource.Cancel();
+                    CancelManagerCancellationTokenSource();
+                    ResetEventHandlers();
                     SetDisposed();
                 }
                 catch (Exception exception)
@@ -333,6 +335,13 @@
                     rwLock.ReleaseWriterLock();
                 }
             }
+        }
+
+        private void ResetEventHandlers()
+        {
+            OnSent = null;
+            OnRecived = null;
+            OnError = null;
         }
 
         /// <summary>
@@ -351,13 +360,26 @@
             _socketCancellationTokenSource = new CancellationTokenSource();
         }
 
-
         private void CancelSocketCancellationTokenSource()
         {
             if (_socketCancellationTokenSource != null 
                 && !_socketCancellationTokenSource.IsCancellationRequested)
             {
                 _socketCancellationTokenSource.Cancel();
+            }
+        }
+
+        private void StartManagerCancellationTokenSource()
+        {
+            _managerCancellationTokenSource = new CancellationTokenSource();
+        }
+
+        private void CancelManagerCancellationTokenSource()
+        {
+            if (_managerCancellationTokenSource != null
+                && !_managerCancellationTokenSource.IsCancellationRequested)
+            {
+                _managerCancellationTokenSource.Cancel();
             }
         }
 
