@@ -1,10 +1,8 @@
 ﻿namespace DigitExample
 {
     using BluetoothClassic.Base;
-    using BluetoothClassic.Droid;
     using DigitExample.ViewModel;
     using System;
-    using System.Text;
     using Xamarin.Forms;
     using Xamarin.Forms.Xaml;
 
@@ -17,6 +15,15 @@
 
             DigitViewModel model = (DigitViewModel)BindingContext;
             model.PropertyChanged += Model_PropertyChanged;
+
+            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
+            App.CurrentBluetoothConnection.OnError += CurrentBluetoothConnection_OnError;
+        }
+
+        ~SynchronizeDigitPage()
+        {
+            App.CurrentBluetoothConnection.OnRecived -= CurrentBluetoothConnection_OnRecived;
+            App.CurrentBluetoothConnection.OnError -= CurrentBluetoothConnection_OnError;
         }
 
         private void CurrentBluetoothConnection_OnRecived(object sender, BluetoothClassic.Base.RecivedEventArgs recivedEventArgs)
@@ -40,20 +47,6 @@
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             SendCurrentDigit();
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
-            App.CurrentBluetoothConnection.OnError += CurrentBluetoothConnection_OnError;
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            App.CurrentBluetoothConnection.OnRecived -= CurrentBluetoothConnection_OnRecived;
-            App.CurrentBluetoothConnection.OnError -= CurrentBluetoothConnection_OnError;
         }
 
         private void CurrentBluetoothConnection_OnError(object sender, System.Threading.ThreadExceptionEventArgs errorEventArgs)
