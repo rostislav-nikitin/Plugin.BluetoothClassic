@@ -2,7 +2,7 @@
 
 if "%~1"=="" goto error
 
-nuget pack Plugin.BluetoothClassic.nuspec -Properties Configuration=Release -Version %1
+nuget pack Plugin.BluetoothClassic.Android.nuspec -Properties Configuration=Release -Version %1
 
 goto exit
 
