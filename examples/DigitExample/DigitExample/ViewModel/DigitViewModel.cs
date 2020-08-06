@@ -21,7 +21,6 @@
         public DigitViewModel()
         {
             SetRecived();
-            ConnectionState = ConnectionState.Created;
             UpdateConnectionStateBackgroundColor();
         }
 

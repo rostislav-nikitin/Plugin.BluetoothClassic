@@ -136,6 +136,7 @@
 
         private async Task ConnectAsync()
         {
+            ConnectionState = ConnectionState.Connecting;
             await CreateSocket();
             ConnectionState = ConnectionState.Connected;
         }
