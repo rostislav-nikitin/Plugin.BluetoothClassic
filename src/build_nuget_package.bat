@@ -7,9 +7,12 @@ nuget pack -Properties Configuration=Release -Version %1
 goto exit
 
 :error
-
-echo Error: versions parameter not specfied.
-echo Use build_nuget_package.bat {vesion}.
-echo Example: build_nuget_package.bat 1.1.0
-
+echo:
+echo Error: The {version} parameter not specfied.
+echo:
+echo Usage: 
+echo     build_nuget_package.bat {vesion}
+echo:
+echo Example: 
+echo     build_nuget_package.bat 1.1.0
 :exit
