@@ -1,13 +1,13 @@
 ![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/images/logo_128x128.png?raw=true)
 # Plugin.BluetoothClassic for Xamarin
-This is a plug-in that supports sending/receiving data through bluetooth classic protocol under the:
+This is a plug-in that supports sending/receiving data through a bluetooth classic protocol under the:
 * Xamarin.Forms
 * Xamarin.Android
 <!-- * Xamarin.iOS (not implemented yet)
 * Xamarin.UWP (not implemented yet) -->
 
 ## How to install it?
-Install a next nuget packages into your Xamarin.Forms/Xamarin.Android projects:
+Install the next nuget packages into the your Xamarin.Forms/Xamarin.Android projects:
 * `PM> Install-Package Plugin.BluetoothClassic -Version 1.0.0`
 
 ## How to use it?
