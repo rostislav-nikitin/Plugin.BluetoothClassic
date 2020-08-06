@@ -17,7 +17,7 @@
   </metadata>
   <files>
     <file src="..\..\LICENSE" target="" />
-    <file src="..\..\documentation\images\logo.png" target="images\" />
+    <file src="..\..\documentation\images\logo_128x128.png" target="images\" />
   </files>
   <dependencies>
     <dependency id="Bluetooth.Classic" version="1.0.0" />
