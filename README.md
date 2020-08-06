@@ -15,7 +15,7 @@ If you building Xamarin.Forms application then you need to install this package 
 More information about this NuGet package is accessbile by this link: https://www.nuget.org/packages/Plugin.BluetoothClassic/
 
 ## How to use it?
-1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
+1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the device default bluetooth adapter
 2. Use `IBluetoothAdapter` in a next way:
   * Properties:
     * `bool Enabled` to check is bluetooth adapter enabled
