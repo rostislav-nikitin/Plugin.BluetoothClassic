@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Digit.DigitPage"
+             xmlns:local="clr-namespace:Digit.ViewModel"
+             Title="Digit">
+    <ContentPage.BindingContext>
+        <local:DigitViewModel Digit="0" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout VerticalOptions="StartAndExpand">
+            <Grid Padding="0" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="64" />
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="64" />
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" VerticalOptions="Start" FontSize="Large" 
+                       Text="{Binding Digit, StringFormat='Current value is: {0:F0}'}"/>
+                <Label Grid.Column="0" Grid.Row="1"
+                       VerticalOptions="Start"
+                       FontSize="Large" Text="Change with slider:" />
+                <Slider Grid.Column="0" Grid.Row="2" x:Name="sliderDigit" 
+                    VerticalOptions="Center"
+                    Maximum="9" Minimum="0" 
+                        MinimumTrackColor="Red"
+                        MaximumTrackColor="Gray"
+                        ThumbColor="Red"
+                    Value="{Binding Digit}" />
+                <Label Grid.Column="0" Grid.Row="3" 
+                       VerticalOptions="Start"
+                       FontSize="Large" Text="Change with stepper:" />
+                <Stepper Grid.Column="0" Grid.Row="4" x:Name="stepperDigit"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Maximum="9" Minimum="0" Increment="1"
+                    Value="{Binding Digit}" />
+            </Grid>
+        </StackLayout>
+        <StackLayout 
+            VerticalOptions="End" 
+            HorizontalOptions="Fill"
+            BackgroundColor="{Binding ConnectionStateBackgroundColor}">
+            <Label x:Name="lblConnectionStatus"
+                   HeightRequest="32"
+                   TextColor="White"
+                   FontSize="Medium"
+                   Text="{Binding ConnectionState, StringFormat='{0}.'}" 
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

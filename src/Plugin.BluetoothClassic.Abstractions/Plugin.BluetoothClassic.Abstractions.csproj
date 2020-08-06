@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Rostyslav Nikitin</Authors>
+    <Description>The package with base types for bluetooth classics support on Xamarin</Description>
+    <Copyright>Copyright 2020</Copyright>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/rostislav-nikitin/Plugin.BluetoothClassic</PackageProjectUrl>
+    <PackageIcon>logo_128x128.png</PackageIcon>
+    <RepositoryUrl>https://github.com/rostislav-nikitin/Plugin.BluetoothClassic.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Bluetooth Classics Xamarin socOS Android iOS UWP</PackageTags>
+    <PackageReleaseNotes>Inital release</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\documentation\images\logo_128x128.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
