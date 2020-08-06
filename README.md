@@ -7,8 +7,12 @@ This is a plug-in that supports sending/receiving data through a bluetooth class
 * Xamarin.UWP (not implemented yet) -->
 
 ## How to install it?
-Install with the next command the nuget package into the your Xamarin.Forms/Xamarin.Android projects:
+One of they ways is to use NuGet package manager. Please, use a next command to install a corresponding NuGet package into the your projects:
 * `PM> Install-Package Plugin.BluetoothClassic -Version 1.0.5`
+
+If you building Xamarin.Forms application then you need to install this package into the both: Xamarin.Forms/Xamarin.Android projects.
+
+More information about a NuGet package is accessbile by this link: https://www.nuget.org/packages/Plugin.BluetoothClassic/
 
 ## How to use it?
 1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
