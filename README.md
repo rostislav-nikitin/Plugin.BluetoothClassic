@@ -1,18 +1,14 @@
 ![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/images/logo_128x128.png?raw=true)
-# BluetoothClassic for Xamarin
-This is a package that supports sending/receiving data through bluetooth classic protocol under the:
+# Plugin.BluetoothClassic for Xamarin
+This is a plug-in that supports sending/receiving data through bluetooth classic protocol under the:
 * Xamarin.Forms
 * Xamarin.Android
 <!-- * Xamarin.iOS (not implemented yet)
 * Xamarin.UWP (not implemented yet) -->
 
 ## How to install it?
-Install a next nuget package into your Xamarin.Forms project:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.1.0`
-
 Install a next nuget packages into your Xamarin.Forms/Xamarin.Android projects:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.1.0`
-* `PM> Install-Package BluetoothClassic.Android -Version 1.1.0`
+* `PM> Install-Package Plugin.BluetoothClassic -Version 1.0.0`
 
 ## How to use it?
 1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
