@@ -18,10 +18,11 @@ Install a next nuget packages into your Xamarin.Forms/Xamarin.Android projects:
 1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
 2. Use `IBluetoothAdapter` in a next way:
   * Properties:
-    * `Enabled` to check is adapter enabled
+    * `bool Enabled` to check is adapter enabled
     * `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
   * Methods:
-    * `Enable()/Disable()` to enable it or disable
+    * `void Enable()` to enable bluetooth adapter
+    * `void Disable()` to disable bluetooth adapter
     * `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
 3. Use `IBluetoothConnection: IDisposable` in a next way:
   * Properties:
