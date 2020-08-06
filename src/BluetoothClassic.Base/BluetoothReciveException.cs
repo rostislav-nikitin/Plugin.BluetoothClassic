@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class BluetoothReciveException : BluetoothTransmitterException
+    public class BluetoothReciveException : BluetoothDataTransferUnitException
     {
         public BluetoothReciveException()
         {

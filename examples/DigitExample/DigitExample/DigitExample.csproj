@@ -20,16 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SelectBluetoothDevicePage.xaml.cs">
-      <DependentUpon>SelectBluetoothDevicePage.xaml</DependentUpon>
+    <Compile Update="SelectBluetoothRemoteDevicePage.xaml.cs">
+      <DependentUpon>SelectBluetoothRemoteDevicePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="DigitPage.xaml.cs">
+      <DependentUpon>DigitPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="SelectBluetoothDevicePage.xaml">
+    <EmbeddedResource Update="SelectBluetoothRemoteDevicePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="SynchronizeDigitPage.xaml">
+    <EmbeddedResource Update="DigitPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

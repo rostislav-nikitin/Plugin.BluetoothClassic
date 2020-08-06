@@ -7,11 +7,11 @@
     using Xamarin.Forms.Xaml;
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SelectBluetoothDevicePage : ContentPage
+    public partial class SelectBluetoothRemoteDevicePage : ContentPage
     {
         private readonly IBluetoothAdapter _bluetoothAdapter;
 
-        public SelectBluetoothDevicePage()
+        public SelectBluetoothRemoteDevicePage()
         {
             _bluetoothAdapter = DependencyService.Resolve<IBluetoothAdapter>();
             InitializeComponent();
@@ -72,15 +72,15 @@
 
             if (bluetoothDeviceModel != null)
             {
-                var connected = await TryConnectAsync(bluetoothDeviceModel);
+                var connected = await TryConnect(bluetoothDeviceModel);
                 if (connected)
                 {
-                    await Navigation.PushAsync(new SynchronizeDigitPage());
+                    await Navigation.PushAsync(new DigitPage());
                 }
             }
         }
 
-        private async Task<bool> TryConnectAsync(BluetoothDeviceModel bluetoothDeviceModel)
+        private async Task<bool> TryConnect(BluetoothDeviceModel bluetoothDeviceModel)
         {
             const bool Connected = true;
             const bool NotConnected = false;
@@ -89,7 +89,7 @@
             var connection = _bluetoothAdapter.CreateConnection(bluetoothDeviceModel);
             try
             {
-                await connection.ConnectAsync();
+                connection.Connect();
                 App.CurrentBluetoothConnection = connection;
 
                 return Connected; 

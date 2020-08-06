@@ -4,14 +4,15 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DigitExample.SynchronizeDigitPage"
+             x:Class="DigitExample.DigitPage"
              xmlns:local="clr-namespace:DigitExample.ViewModel"
              Title="Digit">
     <ContentPage.BindingContext>
         <local:DigitViewModel Digit="0" />
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout VerticalOptions="StartAndExpand">
             <Grid Padding="0" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -44,6 +45,19 @@
                     Maximum="9" Minimum="0" Increment="1"
                     Value="{Binding Digit}" />
             </Grid>
+        </StackLayout>
+        <StackLayout 
+            VerticalOptions="End" 
+            HorizontalOptions="Fill"
+            BackgroundColor="{Binding ConnectionStateBackgroundColor}">
+            <Label x:Name="lblConnectionStatus"
+                   HeightRequest="32"
+                   TextColor="White"
+                   FontSize="Medium"
+                   Text="{Binding ConnectionState, StringFormat='{0}.'}" 
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -13,7 +13,7 @@ namespace DigitExample
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new SelectBluetoothDevicePage());
+            MainPage = new NavigationPage(new SelectBluetoothRemoteDevicePage());
         }
 
         protected override void OnStart()

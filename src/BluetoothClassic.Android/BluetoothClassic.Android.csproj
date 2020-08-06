@@ -84,6 +84,10 @@
   <ItemGroup>
     <Compile Include="BluetoothAdapter.cs" />
     <Compile Include="BluetoothConnection.cs" />
+    <Compile Include="BluetoothReciver.cs" />
+    <Compile Include="ConcurrentValue.cs" />
+    <Compile Include="BluetoothTransmitter.cs" />
+    <Compile Include="BluetoothDataTransferUnitBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
