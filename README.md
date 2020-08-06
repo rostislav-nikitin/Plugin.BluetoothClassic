@@ -21,8 +21,8 @@ More information about this NuGet package is accessbile by this link: https://ww
     * `bool Enabled` to check is bluetooth adapter enabled
     * `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
   * Methods:
-    * `void Enable()` to enable a bluetooth adapter
-    * `void Disable()` to disable a bluetooth adapter
+    * `void Enable()` to enable a default bluetooth adapter
+    * `void Disable()` to disable a default bluetooth adapter
     * `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
 3. Use `IBluetoothConnection: IDisposable` in a next way:
   * Properties:
