@@ -30,7 +30,7 @@ More information about this NuGet package is accessbile by this link: https://ww
   * Methods:
     * `void Connect()` to connect to the remote device
     * `void IDisposable.Dispose()` to disconnect from the remote device and free unmanaged resources
-    * `void Transmit(Memory<byte> buffer)` to add a buffer to the transmit queue (buffers are transmitting to the remote device sequentially while remote device connected otherwise data will be stored until it will reconnected)
+    * `void Transmit(Memory<byte> buffer)` to add a buffer to the transmit queue (buffers are transmitting to the remote device sequentially while remote device connected otherwise data will be stored until it will be reconnected)
   * Events:
     * `event StateChanged OnStateChanged` to subscribe/unsubscribe on any connection state changes
     * `event Transmitted OnTransmitted` to subscribe/unsubscribe on a data transmitted to the connected remote device
