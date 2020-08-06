@@ -8,25 +8,28 @@ This is a package that supports sending/receiving data through bluetooth classic
 
 ## How to install it?
 Install a next nuget package into your Xamarin.Forms project:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.0.0`
+* `PM> Install-Package BluetoothClassic.Base -Version 1.1.0`
 
 Install a next nuget packages into your Xamarin.Forms/Xamarin.Android projects:
-* `PM> Install-Package BluetoothClassic.Base -Version 1.0.0`
-* `PM> Install-Package BluetoothClassic.Android -Version 1.0.1`
+* `PM> Install-Package BluetoothClassic.Base -Version 1.1.0`
+* `PM> Install-Package BluetoothClassic.Android -Version 1.1.0`
 
 ## How to use it?
 1. Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the phone default bluetooth adapter
 2. Use `IBluetoothAdapter` in a next way:
-  * `IBluetoothAdapter.Enabled` to check is adapter enabled
-  * `IBluetoothAdapter.Enable()/IBluetoothAdapter.Disable()` to enable it or disable
-  * `IEnumerable<BluetoothDeviceModel> IBluetoothAdapter.BondedDevices` to show list of the bonded remote devices 
+  * `Enabled` to check is adapter enabled
+  * `Enable()/Disable()` to enable it or disable
+  * `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
   * `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
 3. Use `IBluetoothConnection: IDisposable` in a next way:
-  * `Task IBluetoothConnection.ConnectAsync()` to connect to the remote device
+  * `void Connect()` to connect to the remote device
   * `void IDisposable.Dispose()` to disconnect from the remote device and free unmanaged resources
-  * `bool IBluetoothConnection.Connected` to check is still connected to the remote device (for now work not so stable)
-  * `Task SendAsync(Memory<byte> buffer)` to send byte buffer to the connected remote device
+  * `ConnectionState IBluetoothConnection.ConnectionState` to check connection state
+  * `void Transmit(Memory<byte> buffer)` to add buffer to the transmit queue (buffers are transmitting to the connected remote device sequentially on remote device connected)
+  * `event StateChanged OnStateChanged` to subscribe/unsubscribe on any connection state changes
+  * `event Transmitted OnTransmitted` to subscribe/unsubscribe on data transmitted to the connected remote device
   * `event Recived OnRecived` to subscribe/unsubscribe for/from reciving a data from the connected remote device
+  * `event Error OnError` to subscribe/unsubscribe on any connection errors
 
 ## Examples
 The examples folder contains working example(s) that demonstrates how to use this package in practice.
