@@ -1,8 +1,9 @@
 ![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/images/logo_128x128.png?raw=true)
 # Plugin.BluetoothClassic for Xamarin
-This is a plug-in that supports transmitting/receiving data with use of the SPP (Serial Port Profile) through a bluetooth classic protocol under the:
+This is a plug-in that supports transmitting/receiving data with use of the SPP (Serial Port Profile) through a bluetooth classic protocol in the next types of the Xamarin projects:
 * Xamarin.Forms
 * Xamarin.Android
+
 <!-- * Xamarin.iOS (not implemented yet)
 * Xamarin.UWP (not implemented yet) -->
 
