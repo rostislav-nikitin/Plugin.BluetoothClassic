@@ -41,7 +41,8 @@ More information about this NuGet package is accessbile by this link: https://ww
 Don't forget to add the next lines to the your {AplicationName}.Android/Properties/AndroidManifest.xml file:
 ```XML
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-          android:versionCode="1" android:versionName="1.0" package="com.companyname.plugin.bluetoothclassic">
+          android:versionCode="1" android:versionName="1.0" 
+          package="com.companyname.plugin.bluetoothclassic">
     ...
     <uses-feature android:name="android.hardware.bluetooth" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
