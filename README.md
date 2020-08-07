@@ -37,6 +37,20 @@ More information about this NuGet package is accessbile by this link: https://ww
     * `event Transmitted OnTransmitted` to subscribe/unsubscribe on a data transmitted to the connected remote device
     * `event Recived OnRecived` to subscribe/unsubscribe for/from reciving a data from the connected remote device
     * `event Error OnError` to subscribe/unsubscribe on any connection errors
+    
+Don't forget to add the next lines to the your {AplicationName}.Android/Properties/AndroidManifest.xml file:
+```XML
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+          android:versionCode="1" android:versionName="1.0" package="com.companyname.plugin.bluetoothclassic">
+    ...
+    <uses-feature android:name="android.hardware.bluetooth" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`
+    ...
+</manifest>
+```
 
 ## Examples
 The examples folder contains working example(s) that demonstrates how to use this package in practice.
