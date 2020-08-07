@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Plugin.BluetoothClassic.Abstractions</id>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
     <authors>Rostyslav Nikitin</authors>
     <owners>Rostyslav Nikitin</owners>
     <license type="file">LICENSE.txt</license>

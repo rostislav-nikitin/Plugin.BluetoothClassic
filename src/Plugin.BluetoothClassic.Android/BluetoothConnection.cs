@@ -1,467 +1,268 @@
 ﻿namespace Plugin.BluetoothClassic.Droid
 {
     using Android.Bluetooth;
-    using Plugin.BluetoothClassic.Abstractions;
+    using Android.Util;
     using Java.Util;
-
+    using Plugin.BluetoothClassic.Abstractions;
     using System;
-    using System.Collections.Concurrent;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Xamarin.Forms.Internals;
-    using NativeBluetooth = Android.Bluetooth;
 
-    /// <summary>
-    /// The class that represents a <see cref="BluetoothConnection"/> type that implements a <see cref="IBluetoothConnection"/> interface.
-    /// Usage: to create a connection for send/recive data over bluetooth protocol.
-    /// </summary>
-    public sealed class BluetoothConnection : IBluetoothConnection
+    ///<summary>
+    /// The class that represents a type to create a short time connections between a current bluetooth adapter and the remote bluetooth device.
+    /// It can be used for the short time connections, when required to transmit/recieve a some small portion of the data and then close a connection.
+    ///</summary>
+    public class BluetoothConnection : IBluetoothConnection
     {
-        private const int TimoutInfinity = -1;
-        private ReaderWriterLock _rwLock = new ReaderWriterLock();
+        private readonly UUID SppRecodrUUID = UUID.FromString(BluetoothConstants.SppRecordUUID);
 
-        private const string CurrentDeviceAddress = "00001101-0000-1000-8000-00805F9B34FB";
-        private readonly UUID CurrentDeviceAddressAsUUID = UUID.FromString(CurrentDeviceAddress);
-
-        private readonly ConnectionType _connectionType;
-        private readonly string _remoteDeviceAddress;
-        private readonly ConcurrentValue<ConnectionState> _connectionStateWrapper;
-        private readonly ConcurrentValue<BluetoothSocket> _socketWrapper;
-        private readonly ConcurrentQueue<Memory<byte>> _transmitQueue;
-        private CancellationTokenSource _managerCancellationTokenSource;
-        private CancellationTokenSource _dataTransferUnitsCancellationTokenSource;
-        private BluetoothReciver _reciver;
-        private BluetoothTransmitter _transmitter;
+        private readonly string _bluetoothDeviceAddress;
+        private BluetoothSocket _socket;
 
         /// <summary>
-        /// The <see cref="BluetoothConnection"/> type constructor.
+        /// The constructor that creates a new instance of the <see cref="BluetoothConnection"/> type.
         /// </summary>
-        /// <param name="remoteDeviceAddress">The parameter that represents an address of the remote device to connect to.</param>
-        /// <param name="connectionType">The parameter that represents a bletooth connection type.</param>
-        public BluetoothConnection(string remoteDeviceAddress, 
-            ConnectionType connectionType = ConnectionType.Transiver)
+        /// <param name="bluetoothDeviceAddress">The property that represents an address of the remote device to connect to.</param>
+        internal BluetoothConnection(string bluetoothDeviceAddress)
         {
-            _remoteDeviceAddress = remoteDeviceAddress;
-            _connectionType = connectionType;
-
-            _connectionStateWrapper = new ConcurrentValue<ConnectionState>(ConnectionState.Created);
-            _socketWrapper = new ConcurrentValue<BluetoothSocket>();
-            _transmitQueue = new ConcurrentQueue<Memory<byte>>();
+            _bluetoothDeviceAddress = bluetoothDeviceAddress;
         }
 
         /// <summary>
-        /// The property that represents a current state of the connection.
+        /// The method that connects to the remote bluetooth device asynchronously.
         /// </summary>
-        public ConnectionState ConnectionState
+        /// <returns>Returns a <see cref="Task"/> instance.</returns>
+        public async Task ConnectAsync()
         {
-            get
+            if (string.IsNullOrWhiteSpace(_bluetoothDeviceAddress))
             {
-                return _connectionStateWrapper.Value;
+                throw new BluetoothConnectionException(
+                    $"Can not connect to the remote bluetooth device. Address is not a null or empty.");
             }
-            private set
+
+            var device = GetRemoteDevice();
+
+            await CreateSocketAndConnectAsync(device);
+
+        }
+        private BluetoothDevice GetRemoteDevice()
+        {
+            var result = Android.Bluetooth.BluetoothAdapter.DefaultAdapter
+                .GetRemoteDevice(_bluetoothDeviceAddress);
+
+            if (result == null)
             {
-                _connectionStateWrapper.Value = value;
-                RaiseConnectionStateChangedEvent();
+                throw new BluetoothConnectionException(
+                    $"Can not get remote bluetooth device with address: \"{_bluetoothDeviceAddress}\".");
             }
+
+            return result;
         }
 
-        #region Connect/Reconnect
-        /// <summary>
-        /// The method that connectes current device to the remote device through bluetooth protocol.
-        /// </summary>
-        /// <returns>Returns the <see cref="Task"/> instance.</returns>
-        /// 
-        public void Connect()
+        private async Task CreateSocketAndConnectAsync(BluetoothDevice device)
         {
-            _rwLock.AcquireWriterLock(TimoutInfinity);
+            var socket = device.CreateRfcommSocketToServiceRecord(SppRecodrUUID);
+
+            if (socket == null)
+            {
+                throw new BluetoothConnectionException(
+                    $"Can not connect to the remote bluetooth device with address: \"{_bluetoothDeviceAddress}\". Can not create RFCOMM socket.");
+            }
 
             try
             {
-                if (!(ConnectionState == ConnectionState.Created
-                    || ConnectionState == ConnectionState.Disposed))
-                {
-                    throw new BluetoothConnectionException($"Can not connect because of current connection state is: \"{ConnectionState}\". Can connect only from the next states: \"{ConnectionState.Created}\", \"{ConnectionState.Disposed}\".");
-                }
-
-                ConnectionState = ConnectionState.Initializing;
-
-                StartManager();
-                StartDataTransferUnits();
+                await socket.ConnectAsync();
+                _socket = socket;
             }
             catch
             {
-                throw;
-            }
-            finally
-            {
-                _rwLock.ReleaseWriterLock();
+                throw new BluetoothConnectionException(
+                    $"Can not connect to the remote bluetooth device with address: \"{_bluetoothDeviceAddress}\". Can not connect to the RFCOMM socket.");
             }
         }
 
-        private void StartManager()
+        private void ValidateSocket()
         {
-            TimeSpan TimeoutDefault = new TimeSpan(0, 0, 0, 0, 100);
-
-            StartManagerCancellationTokenSource();
-
-            Task.Run(async () =>
+            if (_socket == null)
             {
-                while (true)
-                {
-                    Thread.Sleep(TimeoutDefault);
-                    ConnectionState state = ConnectionState;
-                    try
-                    {
-                        if(ConnectionState == ConnectionState.Initializing)
-                        {
-                            await ConnectAsync();
-                        }
-                        if (ConnectionState == ConnectionState.ErrorHappend)
-                        {
-                            await ReconnectAsync();
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        HandleException("StartManager::Task::Exception", exception);
-                    }
-                }
-            }, _managerCancellationTokenSource.Token);
-        }
-
-        private void StartManagerCancellationTokenSource()
-        {
-            _managerCancellationTokenSource = new CancellationTokenSource();
-        }
-
-        private async Task ConnectAsync()
-        {
-            ConnectionState = ConnectionState.Connecting;
-            await CreateSocket();
-            ConnectionState = ConnectionState.Connected;
-        }
-        private async Task ReconnectAsync()
-        {
-            ConnectionState = ConnectionState.Reconnecting;
-            await RecreateSocket();
-            ConnectionState = ConnectionState.Connected;
-        }
-
-        private async Task RecreateSocket()
-        {
-            CloseSocket();
-            await CreateSocket();
-        }
-
-        private async Task CreateSocket()
-        {
-            var remoteDevice = GetRemoteDevice();
-
-            var socket = await CreateSocketAndConnect(remoteDevice);
-
-            _socketWrapper.Value = socket;
-        }
-
-        private BluetoothDevice GetRemoteDevice()
-        {
-            var result = NativeBluetooth.BluetoothAdapter.DefaultAdapter
-                .GetRemoteDevice(_remoteDeviceAddress);
-
-            if (result == null)
-            {
-                throw new BluetoothConnectionException($"Can not get remote device with address: \"{_remoteDeviceAddress}\"");
-            }
-
-            return result;
-        }
-
-        private async Task<BluetoothSocket> CreateSocketAndConnect(BluetoothDevice remoteDevice)
-        {
-            BluetoothSocket result = remoteDevice.CreateRfcommSocketToServiceRecord(
-                CurrentDeviceAddressAsUUID);
-
-            if (result == null)
-            {
-                throw new BluetoothConnectionException($"Can not get socket fot device with address: \"{_remoteDeviceAddress}\"");
-            }
-
-            await result.ConnectAsync();
-
-            return result;
-        }
-
-        private void StartDataTransferUnits()
-        {
-            StartDataTransferUnitsCancellationTokenSource();
-            CheckConnectionTypeAndStartReciver();
-            CheckConnectionTypeAndStartTransmitter();
-        }
-
-        private void StartDataTransferUnitsCancellationTokenSource()
-        {
-            _dataTransferUnitsCancellationTokenSource = new CancellationTokenSource();
-        }
-
-        private void CheckConnectionTypeAndStartReciver()
-        {
-            if (_connectionType == ConnectionType.Reciver
-                || _connectionType == ConnectionType.Transiver)
-            {
-                StartReciver();
+                throw new BluetoothConnectionException("Can not transmit/recive data because connection is not opened. Plase, use \"Task ConnectAsync()\" method before.");
             }
         }
-
-        private void StartReciver()
-        {
-            _reciver = new BluetoothReciver(
-                _connectionStateWrapper,
-                _socketWrapper,
-                _dataTransferUnitsCancellationTokenSource.Token);
-
-            _reciver.OnRecived += _reciver_OnRecived;
-            _reciver.OnError += _reciver_OnError;
-        }
-
-        private void _reciver_OnRecived(object sender, RecivedEventArgs recivedEventArgs)
-        {
-            RaiseRecivedEvent(recivedEventArgs.Buffer);
-        }
-
-        private void _reciver_OnError(object sender, ThreadExceptionEventArgs threadExceptionEventArgs)
-        {
-            HandlerDataTransferUnitError(sender, threadExceptionEventArgs);
-        }
-
-        private void CheckConnectionTypeAndStartTransmitter()
-        {
-            if (_connectionType == ConnectionType.Transmitter
-                || _connectionType == ConnectionType.Transiver)
-            {
-                StartTransmitter();
-            }
-        }
-
-        private void StartTransmitter()
-        {
-            _transmitter = new BluetoothTransmitter(
-                _connectionStateWrapper,
-                _socketWrapper, 
-                _transmitQueue, 
-                _dataTransferUnitsCancellationTokenSource.Token);
-
-            _transmitter.OnTransmitted += _transmitter_OnTransmitted;
-            _transmitter.OnError += _transmitter_OnError;
-        }
-
-        private void _transmitter_OnTransmitted(object sender, TransmittedEventArgs recivedEventArgs)
-        {
-            RaiseTransmittedEvent(recivedEventArgs.Buffer);
-        }
-
-        private void _transmitter_OnError(object sender, ThreadExceptionEventArgs threadExceptionEventArgs)
-        {
-            HandlerDataTransferUnitError(sender, threadExceptionEventArgs);
-        }
-
-        private void HandlerDataTransferUnitError(object sender, ThreadExceptionEventArgs threadExceptionEventArgs)
-        {
-            if (threadExceptionEventArgs.Exception is BluetoothDataTransferUnitException
-                && ConnectionState != ConnectionState.ErrorHappend)
-            {
-                HandleException("HandlerDataTransferUnitError", threadExceptionEventArgs.Exception, false);
-            }
-        }
-
-        #endregion
-
-        #region Transmit
 
         /// <summary>
-        /// The method that transmits data through the current bluetooth connection.
+        /// The method that transmit data to the remote bluetooth device asynchronously.
         /// </summary>
-        /// <param name="buffer">The <see cref="Memory{byte}"/> with data to send.</param>
-        public void Transmit(Memory<byte> buffer)
+        /// <param name="buffer">The parameter that represents a <see cref="Memory{byte}"/> buffer to transmit.</param>
+        /// <param name="cancellationToken">The parameter that represents a <see cref="CancellationToken"/> instance.</param>
+        /// <returns>Returns a <see cref="Task"/> instance.</returns>
+        public async Task TransmitAsync(Memory<byte> buffer,
+            CancellationToken cancellationToken = default)
         {
-            _transmitQueue.Enqueue(buffer);
+            ValidateSocket();
+            try
+            {
+                await _socket.OutputStream.WriteAsync(buffer, cancellationToken);
+            }
+            catch(Exception exception)
+            {
+                throw new BluetoothTransmitException(
+                    $"Can not transmit data to the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
         }
 
-        #endregion
-
-        #region Dispose/Disconnect
         /// <summary>
-        /// The method that dispose used non-managed resources.
+        /// The method that transmit data to the remote bluetooth device asynchronously.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="byte[]"/> buffer to transmit.</param>
+        /// <param name="offset">The parameter that represents a transmit buffer offset.</param>
+        /// <param name="count">The parameter that represents a count of bytes to transmit.</param>
+        /// <returns>Returns a <see cref="Task"/> instance.</returns>
+        public async Task TransmitAsync(byte[] buffer, int offset, int count)
+        {
+            ValidateSocket();
+            try
+            {
+                await _socket.OutputStream.WriteAsync(buffer, offset, count);
+            }
+            catch (Exception exception)
+            {
+                throw new BluetoothTransmitException(
+                    $"Can not transmit data to the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// The method that transmit data to the remote bluetooth device asynchronously.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="byte[]"/> buffer to transmit.</param>
+        /// <param name="offset">The parameter that represents a transmit buffer offset.</param>
+        /// <param name="count">The parameter that represents a count of bytes to transmit.</param>
+        /// <param name="cancellationToken">The parameter that represents a <see cref="CancellationToken"/> instance.</param>
+        /// <returns>Returns a <see cref="Task"/> instance.</returns>
+        public async Task TransmitAsync(byte[] buffer, int offset, int count,
+            CancellationToken cancellationToken)
+        {
+            ValidateSocket();
+            try
+            {
+                await _socket.OutputStream.WriteAsync(buffer, offset, count, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                throw new BluetoothTransmitException(
+                    $"Can not transmit data to the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// The property that represents is any data available to recive.
+        /// </summary>
+        public bool DataAvailable
+        {
+            get
+            {
+                ValidateSocket();
+                try
+                {
+                    return _socket.InputStream.IsDataAvailable();
+                }
+                catch (Exception exception)
+                {
+                    throw new BluetoothReciveException(
+                        $"Can not recive is data available for the device with address: \"{_bluetoothDeviceAddress}\"",
+                        exception);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The method that recive data from the remote bluetooth device asynchronously.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="Memory{byte}"/> buffer to recive.</param>
+        /// <param name="cancellationToken">The parameter that represents a <see cref="CancellationToken"/> instance.</param>
+        /// <returns>Returns a <see cref="Task{int}"/> instance with a count of the recieved bytes.</returns>
+        public async Task<int> ReciveAsync(Memory<byte> buffer, 
+            CancellationToken cancellationToken = default)
+        {
+            ValidateSocket();
+            try
+            {
+                return await _socket.InputStream.ReadAsync(buffer, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                throw new BluetoothReciveException(
+                    $"Can not recive data from the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// The method that recive data from the remote bluetooth device asynchronously.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="byte[]"/> buffer to recive.</param>
+        /// <param name="offset">The parameter that represents a recive buffer offset.</param>
+        /// <param name="count">The parameter that represents a count of bytes to recive.</param>
+        /// <returns>Returns a <see cref="Task{int}"/> instance with a count of the recieved bytes.</returns>
+        public async Task<int> ReciveAsync(byte[] buffer, int offset, int count)
+        {
+            ValidateSocket();
+            try
+            {
+                return await _socket.InputStream.ReadAsync(buffer, offset, count);
+            }
+            catch (Exception exception)
+            {
+                throw new BluetoothReciveException(
+                    $"Can not recive data from the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// The method that recive data from the remote bluetooth device asynchronously.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="byte[]"/> buffer to recive.</param>
+        /// <param name="offset">The parameter that represents a recive buffer offset.</param>
+        /// <param name="count">The parameter that represents a count of bytes to recive.</param>
+        /// <param name="cancellationToken">The parameter that represents a <see cref="CancellationToken"/> instance.</param>
+        /// <returns>Returns a <see cref="Task{int}"/> instance witch a count of the recived bytes.</returns>
+        public async Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            ValidateSocket();
+            try
+            {
+                return await _socket.InputStream.ReadAsync(buffer, offset, count, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                throw new BluetoothReciveException(
+                    $"Can not recive data from the device with address: \"{_bluetoothDeviceAddress}\"",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// The mehtod that dispose unmanaged resources used by the <see cref="BluetoothConnection"/> instance.
         /// </summary>
         public void Dispose()
         {
-            _rwLock.AcquireWriterLock(TimoutInfinity);
-
             try
             {
-                if (ConnectionState != ConnectionState.Disposed
-                    && ConnectionState != ConnectionState.Disposing)
+                if (_socket != null)
                 {
-                    ConnectionState = ConnectionState.Disposing;
-                    StopDataTransferUnits();
-                    Disconnect();
-                    CancelManagerCancellationTokenSource();
-                    ResetEventHandlers();
-                    ConnectionState = ConnectionState.Disposed;
+                    _socket.Close();
+                    _socket = null;
                 }
             }
-            catch (Exception exception)
+            catch(Exception exception)
             {
-                LogWarning("Dispose::Exception", exception);
-            }
-            finally
-            {
-                _rwLock.ReleaseWriterLock();
-            }
-
-        }
-
-        private void StopDataTransferUnits()
-        {
-            CancelDataTransferUnitsCancellationTokenSource();
-            CheckConnectionTypeAndStopReciver();
-            CheckConnectionTypeAndStopTransmitter();
-        }
-
-        private void CancelDataTransferUnitsCancellationTokenSource()
-        {
-            if (_dataTransferUnitsCancellationTokenSource != null
-                && !_dataTransferUnitsCancellationTokenSource.IsCancellationRequested)
-            {
-                _dataTransferUnitsCancellationTokenSource.Cancel();
+                Log.Warn("Dispose::Exception", exception.Message);
             }
         }
-
-        private void CheckConnectionTypeAndStopReciver()
-        {
-            if ((_connectionType == ConnectionType.Reciver
-                || _connectionType == ConnectionType.Transiver)
-                && _reciver != null)
-            {
-                _reciver.OnError -= _reciver_OnError;
-                _reciver.OnRecived -= _reciver_OnRecived;
-            }
-        }
-
-        private void CheckConnectionTypeAndStopTransmitter()
-        {
-            if ((_connectionType == ConnectionType.Transmitter
-                || _connectionType == ConnectionType.Transiver)
-                && _transmitter != null)
-            {
-                _transmitter.OnError -= _transmitter_OnError;
-                _transmitter.OnTransmitted -= _transmitter_OnTransmitted;
-            }
-        }
-
-        /// <summary>
-        /// The method that disconnects the current device from the remote device.
-        /// </summary>
-        private void Disconnect()
-        {
-            ConnectionState = ConnectionState.Disconnecting;
-            CloseSocket();
-            ConnectionState = ConnectionState.Disconnected;
-        }
-
-        private void CloseSocket()
-        {
-            try
-            {
-                _socketWrapper.Value?.Close();
-                _socketWrapper.Value = null;
-            }
-            catch (Exception exception)
-            {
-                LogWarning("CloseSocket::Exception", exception);
-            }
-        }
-
-        private void CancelManagerCancellationTokenSource()
-        {
-            if (_managerCancellationTokenSource != null
-                && !_managerCancellationTokenSource.IsCancellationRequested)
-            {
-                _managerCancellationTokenSource.Cancel();
-            }
-        }
-
-        private void ResetEventHandlers()
-        {
-            OnTransmitted = null;
-            OnRecived = null;
-            OnError = null;
-        }
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// The event that will be raised on a state of the current bluetooth connection was changed.
-        /// </summary>
-        public event StateChanged OnStateChanged;
-        private void RaiseConnectionStateChangedEvent()
-        {
-            OnStateChanged?.Invoke(this, new StateChangedEventArgs(ConnectionState));
-        }
-
-        /// <summary>
-        /// The event that will be raised on a buffer transmitted throguh the current bluetooth connection.
-        /// </summary>
-        public event Transmitted OnTransmitted;
-        private void RaiseTransmittedEvent(Memory<byte> buffer)
-        {
-            OnTransmitted?.Invoke(this, new TransmittedEventArgs(buffer));
-        }
-
-        /// <summary>
-        /// The event that will be raised on a buffer recived throguh the current bluetooth connection.
-        /// </summary>
-        public event Recived OnRecived;
-        private void RaiseRecivedEvent(Memory<byte> buffer)
-        {
-            OnRecived?.Invoke(this, new RecivedEventArgs(buffer));
-        }
-
-        /// <summary>
-        /// The event that will be raised on an error happend.
-        /// </summary>
-        public event Error OnError;
-        internal void RaiseErrorEvent(Exception exception)
-        {
-            OnError?.Invoke(this, new ThreadExceptionEventArgs(exception));
-        }
-
-
-        #endregion
-
-        #region Handlers/Log
-
-        private void HandleException(string category, Exception exception, bool logging = true)
-        {
-            ConnectionState = ConnectionState.ErrorHappend;
-            if (logging)
-            {
-                LogWarning(category, exception);
-            }
-            RaiseErrorEvent(exception);
-        }
-
-        private void LogWarning(string category, Exception exception)
-        {
-            string message = exception.Message;
-            LogWarning(category, message);
-        }
-
-        private void LogWarning(string category, string message)
-        {
-            Log.Warning(category, message);
-        }
-
-        #endregion
     }
 }

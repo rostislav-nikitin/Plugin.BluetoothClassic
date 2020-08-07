@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retry.Android", "Retry.Android\Retry.Android.csproj", "{F364283A-4138-45B8-A77A-3EEF4E1D473B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retry", "Retry\Retry.csproj", "{70A76D60-6704-4FF2-ABF4-83410BEF6298}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.BluetoothClassic.Abstractions", "..\..\src\Plugin.BluetoothClassic.Abstractions\Plugin.BluetoothClassic.Abstractions.csproj", "{9D99559B-800F-4010-9B5B-4D95304474DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.BluetoothClassic.Android", "..\..\src\Plugin.BluetoothClassic.Android\Plugin.BluetoothClassic.Android.csproj", "{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F364283A-4138-45B8-A77A-3EEF4E1D473B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70A76D60-6704-4FF2-ABF4-83410BEF6298}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9D99559B-800F-4010-9B5B-4D95304474DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D99559B-800F-4010-9B5B-4D95304474DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D99559B-800F-4010-9B5B-4D95304474DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D99559B-800F-4010-9B5B-4D95304474DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38400BFA-B589-43CB-8F62-0B0EB96AB9E8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E56E1D2B-9A48-4D07-BC6D-A8346F4A4977}
+	EndGlobalSection
+EndGlobal

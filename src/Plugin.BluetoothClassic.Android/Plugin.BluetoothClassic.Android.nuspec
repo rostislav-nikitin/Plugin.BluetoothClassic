@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Plugin.BluetoothClassic.Android</id>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
     <authors>Rostyslav Nikitin</authors>
     <owners>Rostyslav Nikitin</owners>
     <license type="file">LICENSE.txt</license>
@@ -11,15 +11,18 @@
     <icon>logo_128x128.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The package with Android related types for bluetooth classics support on Xamarin</description>
-    <releaseNotes>Inital release</releaseNotes>
+    <releaseNotes>
+      The IBluetoothConnection was moved to the IBluetoothManagedConnection.
+      New IBluetoothConnection was introduced.
+    </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>Bluetooth Classics Xamarin socOS Android iOS UWP</tags>
   <dependencies>
       <group targetFramework=".NETStandard2.0">
-          <dependency id="Plugin.BluetoothClassic.Abstractions" version="1.0.5" />
+          <dependency id="Plugin.BluetoothClassic.Abstractions" version="1.1.0" />
       </group>
       <group targetFramework="monoandroid9.0">
-          <dependency id="Plugin.BluetoothClassic.Abstractions" version="1.0.5" />
+          <dependency id="Plugin.BluetoothClassic.Abstractions" version="1.1.0" />
       </group>
   </dependencies>
   </metadata>

@@ -86,7 +86,7 @@
             const bool NotConnected = false;
 
 
-            var connection = _bluetoothAdapter.CreateConnection(bluetoothDeviceModel);
+            var connection = _bluetoothAdapter.CreateManagedConnection(bluetoothDeviceModel);
             try
             {
                 connection.Connect();

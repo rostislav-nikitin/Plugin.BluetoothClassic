@@ -10,14 +10,14 @@ namespace Plugin.BluetoothClassic.Droid
 
     /// <summary>
     /// The class that pepresents a <see cref="BluetoothAdapter"/> type.
-    /// Usage: to control default device bluetooth adapter and to create a new <see cref="IBluetoothConnection"/> instances.
+    /// It can be used to control default device bluetooth adapter and to create a new bluetooth connections instances.
     /// </summary>
     public class BluetoothAdapter : IBluetoothAdapter
     {
         private long DefaultWaitTimeoutInMsec = 100; 
 
         /// <summary>
-        /// The <see cref="BluetoothAdapter"/> type constructor.
+        /// The constructor that creates <see cref="BluetoothAdapter"/> type instance.
         /// </summary>
         public BluetoothAdapter()
         {
@@ -95,14 +95,26 @@ namespace Plugin.BluetoothClassic.Droid
         }
 
         /// <summary>
-        /// The method that created a new bluetooth connection object.
+        /// The method that creates a short time connection between a current bluetooth adapter and the remote bluetooth device.
+        /// The <see cref="IBluetoothConnection"/> can be used for the short time connections, when required to transmit/recieve a some small potion of the data then close connection.
         /// </summary>
-        /// <param name="bluetoothDeviceModel">The parameters that represents a bluetooth device to connect to.</param>
-        /// <returns>The new instance that implements a <see cref="IBluetoothConnection"/>.</returns>
-        public IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)
+        /// <param name="bluetoothDeviceModel">The property that represents a model of the remote device to connect to.</param>
+        /// <returns>Returns the <see cref="IBluetoothConnection"/> instance.</returns>
+        public IBluetoothConnection CreateConnectionAsync(BluetoothDeviceModel bluetoothDeviceModel)
         {
             return new BluetoothConnection(bluetoothDeviceModel.Address);
         }
 
+        /// <summary>
+        /// The method that creates a managed connection between a current bluetooth adapter and the remote bluetooth device.
+        /// <see cref="IBluetoothManagedConnection"/> can be used for the long time connections. 
+        /// Managed means that it contains the internal manager that control a connection state, reconnect it if required and do other tasks at the background.
+        /// </summary>
+        /// <param name="bluetoothDeviceModel">The property that represents a model of the remote device to connect to.</param>
+        /// <returns>Returns the <see cref="IBluetoothManagedConnection"/> instance.</returns>
+        public IBluetoothManagedConnection CreateManagedConnection(BluetoothDeviceModel bluetoothDeviceModel)
+        {
+            return new BluetoothManagedConnection(bluetoothDeviceModel.Address);
+        }
     }
 }

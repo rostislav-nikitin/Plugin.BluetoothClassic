@@ -1,13 +1,11 @@
-﻿using Plugin.BluetoothClassic.Abstractions;
-using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace Digit
+﻿namespace Digit
 {
+    using Plugin.BluetoothClassic.Abstractions;
+    using Xamarin.Forms;
+
     public partial class App : Application
     {
-        public static IBluetoothConnection CurrentBluetoothConnection { get; internal set; }
+        public static IBluetoothManagedConnection CurrentBluetoothConnection { get; internal set; }
 
         public App()
         {

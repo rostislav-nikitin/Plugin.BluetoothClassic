@@ -26,7 +26,7 @@
         }
 
         /// <summary>
-        /// The event that will be raised on a buffer sent throguh the current bluetooth connection.
+        /// The event that will be raised on a buffer transmit throguh the current bluetooth connection.
         /// </summary>
 
         public event Transmitted OnTransmitted;

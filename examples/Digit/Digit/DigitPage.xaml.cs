@@ -1,7 +1,7 @@
 ﻿namespace Digit
 {
-    using Plugin.BluetoothClassic.Abstractions;
     using Digit.ViewModel;
+    using Plugin.BluetoothClassic.Abstractions;
     using System;
     using Xamarin.Forms;
     using Xamarin.Forms.Xaml;
