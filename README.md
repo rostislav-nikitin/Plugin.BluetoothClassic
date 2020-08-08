@@ -31,7 +31,7 @@ As you see there are supported two different connection types: the `IBluetoothCo
 
 Let's start from the `IBluetoothConnection` one.
 
-### `IBluetoothConnection : IDisposable`
+### `IBluetoothConnection: IDisposable`
 Ypu can use it for the short-time transmit/recive transactions. Sometimes you need to get some small piece of data and close connection. For example you need get 5 bytes of the data each 30 minutes. You need to get it from temperature sensor connected to the MCU wich also connected to the bluetooth module.
 In this case the IBluetoothConnection is your choice.
 It's life-time usually a period of transmitting/reciving data and usually it wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
@@ -189,5 +189,5 @@ Don't forget to add the next lines to the your {AplicationName}.Android/Properti
 
 ## Examples
 The examples folder contains working example(s) that demonstrates how to use this package in practice.
-* Retry example demonstractes how to work with `IBluetoothConnection`
-* Digit example demonstrates how to work with `IBluetoothManagedConnection` one
+* Retry example demonstractes how to work with a `IBluetoothConnection`
+* Digit example demonstrates how to work with a `IBluetoothManagedConnection` one
