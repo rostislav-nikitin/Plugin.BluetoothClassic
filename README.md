@@ -34,19 +34,19 @@ As you see there are supported two different connection types: the `IBluetoothCo
 Let's start from the `IBluetoothConnection` one.
 
 ### `IBluetoothConnection: IDisposable`
-Ypu can use it for the short-time transmit/recive transactions. Sometimes you need to get some small piece of data and close connection. For example you need get 5 bytes of the data each 30 minutes. You need to get it from temperature sensor connected to the MCU wich also connected to the bluetooth module.
-In this case the IBluetoothConnection is your choice.
-It's life-time usually a period of transmitting/reciving data and usually it wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
+Ypu can use it for the short-time transmit/recive transactions. Sometimes you need to get some small piece of data and close connection. For example you need to get 5 bytes of the data each 30 minutes. You need to get it from the temperature sensor connected to the MCU wich also connected to the bluetooth module.
+In this case the `IBluetoothConnection` is a your choice.
+It's life-time usually a period of the transmitting/reciving data and usually it is wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
 
 #### Members
 * `Task ConnectAsync()` to connect to the remote bluetooth device asynchronously
-* `Task TransmitAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)`  to transmit data to the remote bluetooth device asynchronously
+* `Task TransmitAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)` to transmit data to the remote bluetooth device asynchronously
 * `Task TransmitAsync(byte[] buffer, int offset, int count)` to transmit data to the remote bluetooth device asynchronously
 * `Task TransmitAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)` to transmit data to the remote bluetooth device asynchronously
 * `bool DataAvailable { get; }` to check is any data available to recive
 * `Task<int> ReciveAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)` to recive data from the remote bluetooth device asynchronously
-* `Task<int> ReciveAsync(byte[] buffer, int offset, int count)`
-* `Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)`
+* `Task<int> ReciveAsync(byte[] buffer, int offset, int count)` to recive data from the remote bluetooth device asynchronously
+* `Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)` to recive data from the remote bluetooth device asynchronously
 
 #### Example
 (From the examples/Retry example)
@@ -74,8 +74,11 @@ using(var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
 }
 ```
 ### `IBluetoothManagedConnection: IDisposable`
-You can use it for the long-time bluetooth connections. For example to make you device stay connected to some other remote bluetooth device for some minutes/hours for continuous data exchange. This type of connection contains internal connection manager, that care about reconnecting if connection was lost. It use transmit queue. When some code calls Transmit method it simply put buffer data into this queue. By fact data will be transmitted by the transmitter thread when connection will be available. Also depends on settings, this type of connection listen input stream for the data.
-It's life-time usually equal to the life-time of the application. If created on application starts and disposed at application shutdowns.
+You can use it for the long-time bluetooth connections. For example to make you device stay connected to a some other remote bluetooth device for some minutes/hours for the continuous data exchange. 
+This type of the connection contains internal connection manager. It care about the reconnecting if connection was lost. 
+It uses transmit queue. When some code calls `void Transmit(...)`CSharp method it simply put the data into this queue. In fact data will be transmitted with the transmitter thread when the connection will be available. 
+Also depends on settings, this type of connection listen input stream for the data.
+It's life-time usually equal to the life-time of the application. If have to be created on the application starts and disposed on the application shutdowns.
 
 #### Members
 * `ConnectionState IBluetoothConnection.ConnectionState` to check a connection state
@@ -171,7 +174,6 @@ public partial class DigitPage : ContentPage
 ```
 
 ### AndroidManifest.xml
-
 Don't forget to add the next lines to the your {AplicationName}.Android/Properties/AndroidManifest.xml file:
 ```XML
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
