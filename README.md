@@ -17,15 +17,17 @@ More information about this NuGet package is accessbile by this link: https://ww
 
 ## How to use it?
 Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the device default bluetooth adapter
-Use `IBluetoothAdapter` in a next way:
-* Properties:
-  * `bool Enabled` to check is bluetooth adapter enabled
-  * `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
-* Methods:
-  * `void Enable()` to enable a default bluetooth adapter
-  * `void Disable()` to disable a default bluetooth adapter
-  * `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
-  * `IBluetoothManagedConnection CreateManagedConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new managed connection to the bonded remote device
+
+### IBluetoothAdapter
+This is a device bluetooth adapter wrapper.
+
+#### Members
+* `bool Enabled` to check is bluetooth adapter enabled
+* `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
+* `void Enable()` to enable a default bluetooth adapter
+* `void Disable()` to disable a default bluetooth adapter
+* `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
+* `IBluetoothManagedConnection CreateManagedConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new managed connection to the bonded remote device
 
 As you see there are supported two different connection types: the `IBluetoothConnection` and the `IBluetoothManagedConnection` one.
 
@@ -37,16 +39,14 @@ In this case the IBluetoothConnection is your choice.
 It's life-time usually a period of transmitting/reciving data and usually it wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
 
 #### Members
-
-Use `IBluetoothConnection` in a next way:
- * `Task ConnectAsync()` to connect to the remote bluetooth device asynchronously
- * `Task TransmitAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)`  to transmit data to the remote bluetooth device asynchronously
- * `Task TransmitAsync(byte[] buffer, int offset, int count)` to transmit data to the remote bluetooth device asynchronously
- * `Task TransmitAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)` to transmit data to the remote bluetooth device asynchronously
- * `bool DataAvailable { get; }` to check is any data available to recive
- * `Task<int> ReciveAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)` to recive data from the remote bluetooth device asynchronously
- * `Task<int> ReciveAsync(byte[] buffer, int offset, int count)`
- * `Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)`
+* `Task ConnectAsync()` to connect to the remote bluetooth device asynchronously
+* `Task TransmitAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)`  to transmit data to the remote bluetooth device asynchronously
+* `Task TransmitAsync(byte[] buffer, int offset, int count)` to transmit data to the remote bluetooth device asynchronously
+* `Task TransmitAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)` to transmit data to the remote bluetooth device asynchronously
+* `bool DataAvailable { get; }` to check is any data available to recive
+* `Task<int> ReciveAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)` to recive data from the remote bluetooth device asynchronously
+* `Task<int> ReciveAsync(byte[] buffer, int offset, int count)`
+* `Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)`
 
 #### Example
 (From the examples/Retry example)
