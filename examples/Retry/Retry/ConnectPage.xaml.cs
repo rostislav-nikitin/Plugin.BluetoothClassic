@@ -26,7 +26,7 @@
             {
                 using(var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
                 {
-                    if (await connection.RetryConnectAsync())
+                    if (await connection.RetryConnectAsync(retriesCount: 2))
                     {
 
                         byte[] buffer = new byte[TransmitBufferSizeDefault] { (byte)stepperDigit.Value };
