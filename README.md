@@ -19,7 +19,7 @@ More information about this NuGet package is accessbile by this link: https://ww
 Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the device default bluetooth adapter
 
 ### IBluetoothAdapter
-This is a device bluetooth adapter wrapper.
+This is a device default bluetooth adapter wrapper.
 
 #### Members
 * `bool Enabled` to check is bluetooth adapter enabled
