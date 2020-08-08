@@ -18,7 +18,7 @@ More information about this NuGet package is accessbile by this link: https://ww
 ## How to use it?
 Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the device default bluetooth adapter
 
-### IBluetoothAdapter
+### `IBluetoothAdapter`
 This is a device default bluetooth adapter wrapper.
 
 #### Members
