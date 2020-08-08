@@ -76,7 +76,7 @@ using(var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
 ### `IBluetoothManagedConnection: IDisposable`
 You can use it for the long-time bluetooth connections. For example to make you device stay connected to a some other remote bluetooth device for some minutes/hours for the continuous data exchange. 
 This type of the connection contains internal connection manager. It care about the reconnecting if connection was lost. 
-It uses transmit queue. When some code calls `void Transmit(...)`CSharp method it simply put the data into this queue. In fact data will be transmitted with the transmitter thread when the connection will be available. 
+It uses transmit queue. When some code calls `void Transmit(...)` method it simply put the data into this queue. In fact data will be transmitted with the transmitter thread when the connection will be available. 
 Also depends on settings, this type of connection listen input stream for the data.
 It's life-time usually equal to the life-time of the application. If have to be created on the application starts and disposed on the application shutdowns.
 
