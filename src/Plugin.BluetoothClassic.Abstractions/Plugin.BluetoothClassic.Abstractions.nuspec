@@ -16,7 +16,7 @@
       The new IBluetoothConnection was introduced.
     </releaseNotes>
     <copyright>Copyright 2020</copyright>
-    <tags>Bluetooth Classics Xamarin socOS Android iOS UWP</tags>
+    <tags>Bluetooth Classic Plugin Xamarin Android iOS UWP socOS .NET</tags>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="System.Memory" version="4.5.4" exclude="Build,Analyzers" />
