@@ -22,7 +22,7 @@ Use `DependencyService.Resolve<IBluetoothAdapter>` to get instance of the device
 This is a device default bluetooth adapter wrapper.
 
 #### Members
-* `bool Enabled` to check is bluetooth adapter enabled
+* `bool Enabled` to check is default bluetooth adapter enabled
 * `IEnumerable<BluetoothDeviceModel> BondedDevices` to show list of the bonded remote devices 
 * `void Enable()` to enable a default bluetooth adapter
 * `void Disable()` to disable a default bluetooth adapter
