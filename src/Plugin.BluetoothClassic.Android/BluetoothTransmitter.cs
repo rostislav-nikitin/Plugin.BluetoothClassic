@@ -25,12 +25,6 @@
             _trnasmitQueue = trnasmitQueue;
         }
 
-        /// <summary>
-        /// The event that will be raised on a buffer transmit throguh the current bluetooth connection.
-        /// </summary>
-
-        public event Transmitted OnTransmitted;
-
         protected override void StartUnitThread()
         {
             TimeSpan TimeoutDefault = new TimeSpan(0, 0, 0, 0, 1);
@@ -83,6 +77,11 @@
                 }
             }
         }
+
+        /// <summary>
+        /// The event that raises on a data transmitted.
+        /// </summary>
+        public event Transmitted OnTransmitted;
 
         private void RaiseTransmittedEnvet(Memory<byte> buffer)
         {

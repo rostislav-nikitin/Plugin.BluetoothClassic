@@ -13,14 +13,16 @@
 
     /// <summary>
     /// The class that represents a <see cref="BluetoothManagedConnection"/> type that implements a <see cref="IBluetoothManagedConnection"/> interface.
-    /// Usage: to create a connection for send/recive data over bluetooth.
+    /// This type represents a managed connection between a current bluetooth adapter and the remote bluetooth device.
+    /// It can be used for the long time connections. 
+    /// Managed means that it contains the internal manager that control a connection state, reconnect it if required and do other tasks at the background.
     /// </summary>
     public sealed class BluetoothManagedConnection : IBluetoothManagedConnection
     {
         private const int TimoutInfinity = -1;
         private ReaderWriterLock _rwLock = new ReaderWriterLock();
 
-        private readonly UUID CurrentDeviceAddressAsUUID = UUID.FromString(BluetoothConstants.SppRecordUUID);
+        private readonly UUID SppRecordUUID = UUID.FromString(BluetoothConstants.SppRecordUUID);
 
         private readonly ConnectionType _connectionType;
         private readonly string _remoteDeviceAddress;
@@ -49,7 +51,7 @@
         }
 
         /// <summary>
-        /// The property that represents a current state of the connection.
+        /// The property that represents a current connection state.
         /// </summary>
         public ConnectionState ConnectionState
         {
@@ -66,10 +68,9 @@
 
         #region Connect/Reconnect
         /// <summary>
-        /// The method that connectes current device to the remote device through bluetooth.
+        /// The methods that begins connection process. In not creates connection immediately, notify connection manager to create it as soon as possible.
+        /// Use <see cref="Recived"/> event to listen to any state chagnes and particullary for the <see cref="ConnectionState.Connected"/> state.
         /// </summary>
-        /// <returns>Returns the <see cref="Task"/> instance.</returns>
-        /// 
         public void Connect()
         {
             _rwLock.AcquireWriterLock(TimoutInfinity);
@@ -139,6 +140,7 @@
             await CreateSocket();
             ConnectionState = ConnectionState.Connected;
         }
+
         private async Task ReconnectAsync()
         {
             ConnectionState = ConnectionState.Reconnecting;
@@ -177,7 +179,7 @@
         private async Task<BluetoothSocket> CreateSocketAndConnect(BluetoothDevice remoteDevice)
         {
             BluetoothSocket result = remoteDevice.CreateRfcommSocketToServiceRecord(
-                CurrentDeviceAddressAsUUID);
+                SppRecordUUID);
 
             if (result == null)
             {
@@ -276,19 +278,31 @@
         #region Transmit
 
         /// <summary>
-        /// The method that transmits data through the current bluetooth connection.
+        /// The method that do not transmits a data immediately but adds it into the transmit queue to be transmitted on a connection will be in the <see cref="ConnectionState.Connected"/> state.
         /// </summary>
-        /// <param name="buffer">The <see cref="Memory{byte}"/> with data to send.</param>
+        /// <param name="buffer">The parameter that represents a <see cref="byte{int}"/> with data to transmit.</param>
         public void Transmit(Memory<byte> buffer)
         {
             _transmitQueue.Enqueue(buffer);
+        }
+
+
+        /// <summary>
+        /// The method that do not transmits a data immediately but adds it into the transmit queue to be transmitted on a connection will be in the <see cref="ConnectionState.Connected"/> state.
+        /// </summary>
+        /// <param name="buffer">The parameter that represents a <see cref="byte{int}"/> with a data to transmit.</param>
+        /// <param name="offset">The parameter that represents a transmit buffer offset.</param>
+        /// <param name="count">The parameter that represents a count of the bytes to transmit.</param>
+        public void Transmit(byte[] buffer, int offset, int count)
+        {
+            _transmitQueue.Enqueue(new Memory<byte>(buffer, offset, count));
         }
 
         #endregion
 
         #region Dispose/Disconnect
         /// <summary>
-        /// The method that dispose used non-managed resources.
+        /// The method that dispose non-managed resources.
         /// </summary>
         public void Dispose()
         {
@@ -400,7 +414,7 @@
         #region Events
 
         /// <summary>
-        /// The event that will be raised on a state of the current bluetooth connection was changed.
+        /// The event that raises on a connection state changed.
         /// </summary>
         public event StateChanged OnStateChanged;
         private void RaiseConnectionStateChangedEvent()
@@ -409,7 +423,7 @@
         }
 
         /// <summary>
-        /// The event that will be raised on a buffer transmitted throguh the current bluetooth connection.
+        /// The event that raises on a data transmitted.
         /// </summary>
         public event Transmitted OnTransmitted;
         private void RaiseTransmittedEvent(Memory<byte> buffer)
@@ -418,7 +432,7 @@
         }
 
         /// <summary>
-        /// The event that will be raised on a buffer recived throguh the current bluetooth connection.
+        /// The event that raises on a data recived.
         /// </summary>
         public event Recived OnRecived;
         private void RaiseRecivedEvent(Memory<byte> buffer)
@@ -427,7 +441,7 @@
         }
 
         /// <summary>
-        /// The event that will be raised on an error happend.
+        /// The event tht raises on a connection and data transfer errors.
         /// </summary>
         public event Error OnError;
         internal void RaiseErrorEvent(Exception exception)

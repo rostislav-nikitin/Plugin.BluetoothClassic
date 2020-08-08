@@ -63,7 +63,7 @@
         }
 
         /// <summary>
-        /// The event that will be raised on a buffer recived throguh the current bluetooth connection.
+        /// The event that raises on a data recived.
         /// </summary>
         public event Recived OnRecived;
 

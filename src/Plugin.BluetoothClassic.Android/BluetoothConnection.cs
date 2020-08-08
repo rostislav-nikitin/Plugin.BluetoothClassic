@@ -15,7 +15,7 @@
     ///</summary>
     public class BluetoothConnection : IBluetoothConnection
     {
-        private readonly UUID SppRecodrUUID = UUID.FromString(BluetoothConstants.SppRecordUUID);
+        private readonly UUID SppRecordUUID = UUID.FromString(BluetoothConstants.SppRecordUUID);
 
         private readonly string _bluetoothDeviceAddress;
         private BluetoothSocket _socket;
@@ -62,7 +62,7 @@
 
         private async Task CreateSocketAndConnectAsync(BluetoothDevice device)
         {
-            var socket = device.CreateRfcommSocketToServiceRecord(SppRecodrUUID);
+            var socket = device.CreateRfcommSocketToServiceRecord(SppRecordUUID);
 
             if (socket == null)
             {
