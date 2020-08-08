@@ -11,7 +11,10 @@
     <icon>logo_128x128.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The package with Android related types for bluetooth classics support on Xamarin</description>
-    <releaseNotes>Inital release</releaseNotes>
+    <releaseNotes>
+      The IBluetoothConnection was moved to the IBluetoothManagedConnection.
+      The new IBluetoothConnection was introduced.
+    </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>Bluetooth Classics Xamarin socOS Android iOS UWP</tags>
     <dependencies>
