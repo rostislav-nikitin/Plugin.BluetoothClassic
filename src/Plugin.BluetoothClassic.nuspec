@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Plugin.BluetoothClassic</id>
-    <version>1.1.0</version>
+    <version>1.1.5</version>
     <authors>Rostyslav Nikitin</authors>
     <owners>Rostyslav Nikitin</owners>
     <license type="file">LICENSE.txt</license>
@@ -10,10 +10,13 @@
     <repository type="git" url="https://github.com/rostislav-nikitin/Plugin.BluetoothClassic.git" branch="master" />
     <icon>logo_128x128.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>The package with Android related types for bluetooth classics support on Xamarin</description>
+    <description>The package that provides Bluetooth adapter wrapper and different Bluetooth connections types for the Xamarin.Forms/Xamarin.Android applications.</description>
     <releaseNotes>
-      The IBluetoothConnection was moved to the IBluetoothManagedConnection.
-      The new IBluetoothConnection was introduced.
+1. The IBluetoothAdapter method IBluetoothConnection CreateConnectionAsync(BluetoothDeviceModel bluetoothDeviceModel); name was changed to the:
+IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel); one.
+The Async suffix was removed because it is not awaitable method
+2. The NuGet package description was updated
+3. The ConnectionState.ErrorHappend was updated to the ConnectionState.ErrorOccured
     </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>Bluetooth Classic Plugin Xamarin Android iOS UWP socOS .NET</tags>

@@ -52,7 +52,7 @@ It's life-time usually a period of the transmitting/reciving data and usually it
 (From the examples/Retry example)
 
 ```CSharp
-using(var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
+using(var connection = App.BluetoothAdapter.CreateConnection(remoteDevice))
 {
     if (await connection.RetryConnectAsync(retriesCount: 2))
     {

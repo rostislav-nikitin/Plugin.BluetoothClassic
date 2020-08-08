@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Plugin.BluetoothClassic.Abstractions
+﻿namespace Plugin.BluetoothClassic.Abstractions
 {
+    using System.Collections.Generic;
+
     public interface IBluetoothAdapter
     {
         /// <summary>
@@ -48,7 +45,7 @@ namespace Plugin.BluetoothClassic.Abstractions
         /// </summary>
         /// <param name="bluetoothDeviceModel">The property that represents a model of the remote device to connect to.</param>
         /// <returns>Returns the <see cref="IBluetoothConnection"/> instance.</returns>
-        IBluetoothConnection CreateConnectionAsync(BluetoothDeviceModel bluetoothDeviceModel);
+        IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel);
 
         /// <summary>
         /// The method that creates a managed connection between a current bluetooth adapter and the remote bluetooth device.

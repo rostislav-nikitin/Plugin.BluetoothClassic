@@ -74,7 +74,7 @@
                 case ConnectionState.Connected:
                     ConnectionStateBackgroundColor = Color.SeaGreen;
                     break;
-                case ConnectionState.ErrorHappend:
+                case ConnectionState.ErrorOccured:
                 case ConnectionState.Reconnecting:
                     ConnectionStateBackgroundColor = Color.Red;
                     break;

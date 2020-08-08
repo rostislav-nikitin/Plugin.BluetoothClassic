@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-
-namespace Plugin.BluetoothClassic.Abstractions
+﻿namespace Plugin.BluetoothClassic.Abstractions
 {
+    using System.Runtime.Serialization;
+
     public enum ConnectionState
     {
         [EnumMember(Value = "Created...")]
@@ -12,8 +12,8 @@ namespace Plugin.BluetoothClassic.Abstractions
         Connecting,
         [EnumMember(Value = "Connected")]
         Connected,
-        [EnumMember(Value = "ErrorHappend")]
-        ErrorHappend,
+        [EnumMember(Value = "ErrorOccured")]
+        ErrorOccured,
         [EnumMember(Value = "Reconnecting...")]
         Reconnecting,
         [EnumMember(Value = "Disconnecting...")]

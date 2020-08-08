@@ -116,7 +116,7 @@
                         {
                             await ConnectAsync();
                         }
-                        if (ConnectionState == ConnectionState.ErrorHappend)
+                        if (ConnectionState == ConnectionState.ErrorOccured)
                         {
                             await ReconnectAsync();
                         }
@@ -267,7 +267,7 @@
         private void HandlerDataTransferUnitError(object sender, ThreadExceptionEventArgs threadExceptionEventArgs)
         {
             if (threadExceptionEventArgs.Exception is BluetoothDataTransferUnitException
-                && ConnectionState != ConnectionState.ErrorHappend)
+                && ConnectionState != ConnectionState.ErrorOccured)
             {
                 HandleException("HandlerDataTransferUnitError", threadExceptionEventArgs.Exception, false);
             }
@@ -456,7 +456,7 @@
 
         private void HandleException(string category, Exception exception, bool logging = true)
         {
-            ConnectionState = ConnectionState.ErrorHappend;
+            ConnectionState = ConnectionState.ErrorOccured;
             if (logging)
             {
                 LogWarning(category, exception);

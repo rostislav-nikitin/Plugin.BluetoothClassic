@@ -100,7 +100,7 @@ namespace Plugin.BluetoothClassic.Droid
         /// </summary>
         /// <param name="bluetoothDeviceModel">The property that represents a model of the remote device to connect to.</param>
         /// <returns>Returns the <see cref="IBluetoothConnection"/> instance.</returns>
-        public IBluetoothConnection CreateConnectionAsync(BluetoothDeviceModel bluetoothDeviceModel)
+        public IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)
         {
             return new BluetoothConnection(bluetoothDeviceModel.Address);
         }

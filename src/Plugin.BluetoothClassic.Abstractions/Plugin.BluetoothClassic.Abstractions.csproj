@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Bluetooth Classics Xamarin socOS Android iOS UWP</PackageTags>
     <PackageReleaseNotes>Inital release</PackageReleaseNotes>
-    <Version>1.1.0</Version>
+    <Version>1.1.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

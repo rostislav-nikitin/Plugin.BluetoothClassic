@@ -24,7 +24,7 @@
             var remoteDevice = (BluetoothDeviceModel)BindingContext;
             if (remoteDevice != null)
             {
-                using(var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
+                using(var connection = App.BluetoothAdapter.CreateConnection(remoteDevice))
                 {
                     if (await connection.RetryConnectAsync(retriesCount: 2))
                     {
@@ -52,7 +52,7 @@
             var remoteDevice = (BluetoothDeviceModel)BindingContext;
             if (remoteDevice != null)
             {
-                using (var connection = App.BluetoothAdapter.CreateConnectionAsync(remoteDevice))
+                using (var connection = App.BluetoothAdapter.CreateConnection(remoteDevice))
                 {
                     if (await connection.RetryConnectAsync())
                     {
