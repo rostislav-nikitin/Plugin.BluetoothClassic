@@ -124,7 +124,8 @@ public partial class SelectBluetoothRemoteDevicePage : ContentPage
         catch (BluetoothConnectionException exception)
         {
             await DisplayAlert("Connection error",
-                $"Can not connect to the device: {bluetoothDeviceModel.Name}({bluetoothDeviceModel.Address}).\n" +
+                $"Can not connect to the device: {bluetoothDeviceModel.Name}" + 
+                    $"({bluetoothDeviceModel.Address}).\n" +
                     $"Exception: \"{exception.Message}\"\n" +
                     "Please, try another one.",
                 "Close");
@@ -154,9 +155,12 @@ public partial class DigitPage : ContentPage
 
         if (App.CurrentBluetoothConnection != null)
         {
-            App.CurrentBluetoothConnection.OnStateChanged += CurrentBluetoothConnection_OnStateChanged;
-            App.CurrentBluetoothConnection.OnRecived += CurrentBluetoothConnection_OnRecived;
-            App.CurrentBluetoothConnection.OnError += CurrentBluetoothConnection_OnError;
+            App.CurrentBluetoothConnection.OnStateChanged += 
+                CurrentBluetoothConnection_OnStateChanged;
+            App.CurrentBluetoothConnection.OnRecived += 
+                CurrentBluetoothConnection_OnRecived;
+            App.CurrentBluetoothConnection.OnError += 
+                CurrentBluetoothConnection_OnError;
         }
     }
     
