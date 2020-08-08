@@ -11,7 +11,7 @@ This is a plug-in that supports transmitting/receiving data with use of the SPP 
 One of they ways is to use a NuGet package manager:
 * `PM> Install-Package Plugin.BluetoothClassic -Version 1.0.5`
 
-If you building Xamarin.Forms application then you need to install this package into the both: Xamarin.Forms/Xamarin.Android projects.
+If you building Xamarin.Forms application then you need to install this package into the both: Xamarin.Forms and Xamarin.Android projects.
 
 More information about this NuGet package is accessbile by this link: https://www.nuget.org/packages/Plugin.BluetoothClassic/
 
