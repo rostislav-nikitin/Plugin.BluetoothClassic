@@ -211,3 +211,6 @@ Don't forget to add the next lines to the your {AplicationName}.Android/Properti
 The examples folder contains working example(s) that demonstrates how to use this package in practice.
 * Retry example demonstractes how to work with a `IBluetoothConnection`
 * Digit example demonstrates how to work with a `IBluetoothManagedConnection` one
+
+## Links
+Intro and tutorials on my channel: https://www.youtube.com/watch?v=uiMoS-FEPVA&list=PLeO-sYwJtKn6W_gUblQ0QuqQW9peTq_oz
