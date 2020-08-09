@@ -49,29 +49,42 @@ It's life-time usually a period of the transmitting/reciving data and usually it
 * `Task<int> ReciveAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)` to recive data from the remote bluetooth device asynchronously
 
 #### Example
-(From the examples/Retry example)
 
 ```CSharp
-using(var connection = App.BluetoothAdapter.CreateConnection(remoteDevice))
+public async void Transmit(BluetoothDeviceModel device, byte value)
 {
-    if (await connection.RetryConnectAsync(retriesCount: 2))
-    {
+    const int BufferSize = 1;
+    const int OffsetDefault = 0;
 
-        byte[] buffer = new byte[TransmitBufferSizeDefault] { (byte)stepperDigit.Value };
-        try
-        {
-            await connection.RetryTransmitAsync(buffer, BufferOffsetDefault, buffer.Length);
-        }
-        catch (Exception exception)
-        {
-            await DisplayAlert("Exception", exception.Message, "Close");
-        }
-    }
-    else
+    if (device != null)
     {
-        await DisplayAlert("Exception", "Can not connect.", "Close");
+        var _bluetoothAdapter = DependencyService.Resolve<IBluetoothAdapter>();
+
+        using (var connection = _bluetoothAdapter.CreateConnection(device))
+        {
+            if(await connection.RetryConnectAsync(retriesCount: 5))
+            {
+                byte[] buffer = new byte[BufferSize] { value };
+                try
+                {
+                    if (!await connection.RetryTransmitAsync(buffer, OffsetDefault, buffer.Length))
+                    {
+                        await DisplayAlert("Error", "Can not transmit data.", "Close");
+                    }
+                }
+                catch(Exception exception)
+                {
+                    await DisplayAlert("Error", exception.Message, "Close");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Can not to connect.", "Close");
+            }
+        }
     }
 }
+
 ```
 ### `IBluetoothManagedConnection: IDisposable`
 You can use it for the long-time bluetooth connections. For example to make you device stay connected to a some other remote bluetooth device for some minutes/hours for the continuous data exchange. 
@@ -81,7 +94,7 @@ Also depends on settings, this type of connection listen input stream for the da
 It's life-time usually equal to the life-time of the application. If have to be created on the application starts and disposed on the application shutdowns.
 
 #### Members
-* `ConnectionState IBluetoothConnection.ConnectionState` to check a connection state
+* `ConnectionState ConnectionState` to check a connection state
 * `void Connect()` to connect to the remote device
 * `void IDisposable.Dispose()` to disconnect from the remote device and free unmanaged resources
 * `void Transmit(Memory<byte> buffer)` to add a buffer to the transmit queue (buffers are transmitting to the remote device sequentially while remote device connected. Otherwise data will be stored until it will be reconnected)
