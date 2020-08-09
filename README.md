@@ -213,5 +213,6 @@ The examples folder contains working example(s) that demonstrates how to use thi
 * Digit example demonstrates how to work with a `IBluetoothManagedConnection` one
 
 ## Links
-Intro and tutorials on my channel:
-[![IMAGE ALT TEXT HERE](https://i9.ytimg.com/vi_webp/uiMoS-FEPVA/mqdefault.webp?sqp=CLz4vvkF&rs=AOn4CLDc3evTSaCP70wPUzeY0OeG4Q1k9w)](https://www.youtube.com/watch?v=uiMoS-FEPVA&list=PLeO-sYwJtKn6W_gUblQ0QuqQW9peTq_oz)
+Intro and tutorials on my YouTube channel:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/uiMoS-FEPVA/0.jpg)](https://www.youtube.com/watch?v=uiMoS-FEPVA&list=PLeO-sYwJtKn6W_gUblQ0QuqQW9peTq_oz)
