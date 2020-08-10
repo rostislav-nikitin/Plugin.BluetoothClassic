@@ -217,6 +217,5 @@ Plugin.BluetoothClassic intro and tutorials on my YouTube channel:
 
 [![Plugin.BluetoothClassic for Xamarin. Intro](https://img.youtube.com/vi/uiMoS-FEPVA/0.jpg)](https://www.youtube.com/watch?v=uiMoS-FEPVA&list=PLeO-sYwJtKn6W_gUblQ0QuqQW9peTq_oz "Plugin.BluetoothClassic for Xamarin. Intro")
 
-
 ## Contacts
 e-mail: rostislav.nikitin@gmail.com
