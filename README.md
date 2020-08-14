@@ -67,7 +67,8 @@ public async void Transmit(BluetoothDeviceModel device, byte value)
                 byte[] buffer = new byte[BufferSize] { value };
                 try
                 {
-                    if (!await connection.RetryTransmitAsync(buffer, OffsetDefault, buffer.Length))
+                    if (!await connection.RetryTransmitAsync(
+                        buffer, OffsetDefault, buffer.Length))
                     {
                         await DisplayAlert("Error", "Can not transmit data.", "Close");
                     }
