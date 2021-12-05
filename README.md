@@ -1,6 +1,6 @@
 ![picture](https://github.com/rostislav-nikitin/BluetoothClassic.Xamarin/blob/master/documentation/images/logo_128x128.png?raw=true)
 # Plugin.BluetoothClassic for Xamarin
-This is a plug-in that supports transmitting/receiving data with use of the SPP (Serial Port Profile) through a bluetooth classic protocol in the next types of the Xamarin projects:
+This is a plug-in that supports transmitting/receiving data with the use of the SPP (Serial Port Profile) through a bluetooth classic protocol in the next types of the Xamarin projects:
 * Xamarin.Forms
 * Xamarin.Android
 
@@ -8,10 +8,10 @@ This is a plug-in that supports transmitting/receiving data with use of the SPP 
 * Xamarin.UWP (not implemented yet) -->
 
 ## How to install it?
-One of they ways is to use a NuGet package manager:
+One of they ways to install it is to use a NuGet package manager:
 * `PM> Install-Package Plugin.BluetoothClassic -Version 1.1.5`
 
-If you building Xamarin.Forms application then you need to install this package into the both: Xamarin.Forms and Xamarin.Android projects.
+If you're building a Xamarin.Forms application then you need to install this package into the both: Xamarin.Forms and Xamarin.Android projects.
 
 More information about this NuGet package is accessbile by this link: https://www.nuget.org/packages/Plugin.BluetoothClassic/
 
@@ -29,14 +29,14 @@ This is a device default bluetooth adapter wrapper.
 * `IBluetoothConnection CreateConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new connection to the bonded remote device
 * `IBluetoothManagedConnection CreateManagedConnection(BluetoothDeviceModel bluetoothDeviceModel)` to create a new managed connection to the bonded remote device
 
-As you see there are supported two different connection types: the `IBluetoothConnection` and the `IBluetoothManagedConnection` one.
+As you see, there are two different supported connection types: the `IBluetoothConnection`, and the `IBluetoothManagedConnection`.
 
-Let's start from the `IBluetoothConnection` one.
+Let's start with the `IBluetoothConnection` one.
 
 ### `IBluetoothConnection: IDisposable`
-Ypu can use it for the short-time transmit/recive transactions. Sometimes you need to get some small piece of data and close connection. For example you need to get 5 bytes of the data each 30 minutes. You need to get it from the temperature sensor connected to the MCU wich also connected to the bluetooth module.
-In this case the `IBluetoothConnection` is a your choice.
-It's life-time usually a period of the transmitting/reciving data and usually it is wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
+You can use it for the short-time to transmit/recive transactions. Sometimes you need to get some small piece of data and close the connection. For example, suppose you need to get 5 bytes of the data every 30 minutes. You need to get it from a temperature sensor connected to the MCU wich also connected to the bluetooth module.
+In this case, the `IBluetoothConnection` is your choice.
+It's life-time is usually a period of the transmitting/reciving data and usually it is wrapped into the `using(...){..}` statement to automaticlly dispose it after it's job done.
 
 #### Members
 * `Task ConnectAsync()` to connect to the remote bluetooth device asynchronously
@@ -88,11 +88,11 @@ public async void Transmit(BluetoothDeviceModel device, byte value)
 
 ```
 ### `IBluetoothManagedConnection: IDisposable`
-You can use it for the long-time bluetooth connections. For example to make you device stay connected to a some other remote bluetooth device for some minutes/hours for the continuous data exchange. 
-This type of the connection contains internal connection manager. It care about the reconnecting if connection was lost. 
-It uses transmit queue. When some code calls `void Transmit(...)` method it simply put the data into this queue. In fact data will be transmitted with the transmitter thread when the connection will be available. 
-Also depends on settings, this type of connection listen input stream for the data.
-It's life-time usually equal to the life-time of the application. If have to be created on the application starts and disposed on the application shutdowns.
+You can use it for the long-term bluetooth connections. For example, in order to make your device stay connected to some other remote bluetooth device for minutes/hours for a continuous data exchange. 
+This type of the connection contains internal connection manager. It cares about reconnecting if connection was lost. 
+It uses transmit queue. When some code calls `void Transmit(...)` method it simply puts the data into this queue. In fact, data will be transmitted with the transmitter thread when the connection will be available. 
+Also depends on settings, this type of connection listens to input stream for the data.
+It's life-time usually is equal to the life-time of the application. If it have to be created on the application starts and disposed on the application shutdowns.
 
 #### Members
 * `ConnectionState ConnectionState` to check a connection state
@@ -193,7 +193,7 @@ public partial class DigitPage : ContentPage
 ```
 
 ### AndroidManifest.xml
-Don't forget to add the next lines to the your {AplicationName}.Android/Properties/AndroidManifest.xml file:
+Don't forget to add the following lines to the your {AplicationName}.Android/Properties/AndroidManifest.xml file:
 ```XML
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
           android:versionCode="1" android:versionName="1.0" 
